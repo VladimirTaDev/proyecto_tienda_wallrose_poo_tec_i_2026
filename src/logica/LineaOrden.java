@@ -28,6 +28,10 @@ public class LineaOrden {
 	public double calcularCosto() {
         return cantidad * producto.getPrecio();
     }
-    
+	
+	public void actualizar(Producto producto, double cantidad) {
+        this.producto = producto;
+        this.cantidad = cantidad;
+    }
     
 }
