@@ -213,4 +213,80 @@ public class ControladoraWallRose {
         return resultado;
     }
     
+    private void validarOrdenEditable(OrdenCompra orden) {
+        if (orden.getEstado() != EstadoOrden.INICIADA) {
+            throw new IllegalArgumentException("Solo se pueden modificar líneas de órdenes iniciadas.");
+        }
+    }
+
+    private void validarCantidad(Producto producto, double cantidad) {
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
+        }
+
+        if (!producto.hayExistencias(cantidad)) {
+            throw new IllegalArgumentException("No hay existencias suficientes.");
+        }
+    }
+    
+    public void agregarLineaOrden(int numeroOrden, int codigoProducto, double cantidad) {
+        OrdenCompra orden = obtenerOrdenObligatoria(numeroOrden);
+        Producto producto = obtenerProductoObligatorio(codigoProducto);
+
+        validarOrdenEditable(orden);
+        validarCantidad(producto, cantidad);
+
+        LineaOrden linea = new LineaOrden(producto, cantidad);
+        orden.agregarLinea(linea);
+    }
+
+    public void actualizarLineaOrden(int numeroOrden, int numeroLinea, int codigoProducto, double cantidad) {
+        OrdenCompra orden = obtenerOrdenObligatoria(numeroOrden);
+        Producto producto = obtenerProductoObligatorio(codigoProducto);
+
+        validarOrdenEditable(orden);
+        validarCantidad(producto, cantidad);
+
+        orden.actualizarLinea(numeroLinea, producto, cantidad);
+    }
+
+    public void borrarLineaOrden(int numeroOrden, int numeroLinea) {
+        OrdenCompra orden = obtenerOrdenObligatoria(numeroOrden);
+
+        validarOrdenEditable(orden);
+
+        orden.borrarLinea(numeroLinea);
+    }
+    
+    public void establecerOrdenPendiente(int numeroOrden) {
+        OrdenCompra orden = obtenerOrdenObligatoria(numeroOrden);
+
+        if (orden.getEstado() != EstadoOrden.INICIADA) {
+            throw new IllegalArgumentException("Solo una orden iniciada puede pasar a pendiente.");
+        }
+
+        for (LineaOrden linea : orden.getLineas()) {
+            Producto producto = linea.getProducto();
+            if (!producto.hayExistencias(linea.getCantidad())) {
+                throw new IllegalArgumentException("No hay existencias suficientes para " + producto.getNombre());
+            }
+        }
+
+        for (LineaOrden linea : orden.getLineas()) {
+            linea.getProducto().disminuirExistencias(linea.getCantidad());
+        }
+
+        orden.setEstado(EstadoOrden.PENDIENTE);
+    }
+
+    public void establecerOrdenTerminada(int numeroOrden) {
+        OrdenCompra orden = obtenerOrdenObligatoria(numeroOrden);
+
+        if (orden.getEstado() != EstadoOrden.PENDIENTE) {
+            throw new IllegalArgumentException("Solo una orden pendiente puede terminarse.");
+        }
+
+        orden.setEstado(EstadoOrden.TERMINADA);
+    }
+    
 }
