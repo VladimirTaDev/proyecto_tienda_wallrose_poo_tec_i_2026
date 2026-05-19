@@ -1,2 +1,3 @@
 module proyecto_tienda_wallrose_poo_tec_i_2026 {
+	requires java.desktop;
 }
