@@ -74,4 +74,9 @@ public class Producto {
         existencias += cantidad;
     }
     
+    @Override
+    public String toString() {
+        return codigo + " - " + nombre;
+    }
+    
 }

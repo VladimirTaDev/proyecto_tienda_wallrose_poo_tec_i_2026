@@ -67,10 +67,26 @@ public class OrdenCompra {
 	}
 	
 	public void borrarLinea(int numeroLinea) {
-		this.lineas.remove(numeroLinea);
+	    if (numeroLinea < 0 || numeroLinea >= lineas.size()) {
+	        throw new IllegalArgumentException("Número de línea no válido.");
+	    }
+
+	    lineas.remove(numeroLinea);
 	}
 	
 	public void actualizarLinea(int numeroLinea, Producto producto, double cantidad) {
-		this.lineas.get(numeroLinea).actualizar(producto, cantidad);
+	    if (numeroLinea < 0 || numeroLinea >= lineas.size()) {
+	        throw new IllegalArgumentException("Número de línea no válido.");
+	    }
+
+	    lineas.get(numeroLinea).actualizar(producto, cantidad);
+	}
+	
+	public int cantidadLineas() {
+	    return lineas.size();
+	}
+
+	public LineaOrden getLinea(int numeroLinea) {
+	    return lineas.get(numeroLinea);
 	}
 }

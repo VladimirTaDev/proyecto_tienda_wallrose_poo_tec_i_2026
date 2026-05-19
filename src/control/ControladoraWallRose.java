@@ -289,4 +289,25 @@ public class ControladoraWallRose {
         orden.setEstado(EstadoOrden.TERMINADA);
     }
     
+    public double obtenerMontoTotalPendiente() {
+        double total = 0;
+
+        for (OrdenCompra orden : ordenes.values()) {
+            if (orden.getEstado() == EstadoOrden.PENDIENTE) {
+                total += orden.calcularTotal();
+            }
+        }
+
+        return total;
+    }
+
+    public void borrarOrden(int numeroOrden) {
+        OrdenCompra orden = obtenerOrdenObligatoria(numeroOrden);
+
+        Cliente cliente = orden.getCliente();
+        cliente.borrarOrden(orden);
+
+        ordenes.remove(numeroOrden);
+    }
+    
 }

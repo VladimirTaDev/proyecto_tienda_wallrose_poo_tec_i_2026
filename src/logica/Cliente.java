@@ -5,16 +5,16 @@ import java.util.TreeMap;
 
 public class Cliente {
 	private String id;
-	private String email;
 	private String nombre;
+	private String email;
 	private Map<Integer, OrdenCompra> ordenes;
 	
 
-	public Cliente(String id, String email, String nombre) {
-		this.id = id;
-		this.email = email;
-		this.nombre = nombre;
-		this.ordenes = new TreeMap<>();
+	public Cliente(String id, String nombre, String email) {
+	    this.id = id;
+	    this.nombre = nombre;
+	    this.email = email;
+	    this.ordenes = new TreeMap<>();
 	}
 
 	public String getEmail() {
@@ -51,6 +51,23 @@ public class Cliente {
 	
 	public void borrarOrden(OrdenCompra orden) {
 		ordenes.remove(orden.getNumero());
+	}
+	
+	public double calcularMontoPendiente() {
+	    double total = 0;
+
+	    for (OrdenCompra orden : ordenes.values()) {
+	        if (orden.getEstado() == EstadoOrden.PENDIENTE) {
+	            total += orden.calcularTotal();
+	        }
+	    }
+
+	    return total;
+	}
+
+	@Override
+	public String toString() {
+	    return id + " - " + nombre;
 	}
 	
 }
