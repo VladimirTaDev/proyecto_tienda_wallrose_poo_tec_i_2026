@@ -24,6 +24,9 @@ public class ControladoraWallRose {
         clientes = new TreeMap<>();
         productos = new TreeMap<>();
         ordenes = new TreeMap<>();
+        
+        // TEMPORAL: Cargar datos de prueba
+        cargarDatosPrueba();
     }
 
     public static ControladoraWallRose obtenerInstancia() {
@@ -308,6 +311,46 @@ public class ControladoraWallRose {
         cliente.borrarOrden(orden);
 
         ordenes.remove(numeroOrden);
+    }
+    
+    // TEMPORAL: Método para cargar datos de prueba al iniciar la aplicación
+    private void cargarDatosPrueba() {
+        try {
+            crearCliente("1-1111-1111", "Dmitri Volkov", "dmitri.volkov@wallrose.com");
+            crearCliente("2-2222-2222", "Anastasia Morozova", "anastasia.morozova@wallrose.com");
+            crearCliente("3-3333-3333", "Nikolai Sokolov", "nikolai.sokolov@wallrose.com");
+            crearCliente("4-4444-4444", "Irina Petrova", "irina.petrova@wallrose.com");
+
+            int codigoRacion = crearProducto("Ración militar", 30.0, "unidad", 1200.0);
+            int codigoCaja = crearProducto("Caja de cartón táctica", 15.0, "unidad", 750.0);
+            int codigoCodec = crearProducto("Codec portátil", 5.0, "unidad", 8500.0);
+            int codigoCigarros = crearProducto("Cigarros marca Phantom", 20.0, "paquete", 950.0);
+            int codigoBandana = crearProducto("Bandana infinita", 3.0, "unidad", 12000.0);
+            int codigoNanoMaquinas = crearProducto("Nanomáquinas", 50.0, "dosis", 3000.0);
+            int codigoCamuflaje = crearProducto("Traje de camuflaje óptico", 4.0, "unidad", 15000.0);
+
+            int orden1 = crearOrdenVacia("1-1111-1111");
+            agregarLineaOrden(orden1, codigoRacion, 3.0);
+            agregarLineaOrden(orden1, codigoCaja, 1.0);
+            establecerOrdenPendiente(orden1);
+
+            int orden2 = crearOrdenVacia("2-2222-2222");
+            agregarLineaOrden(orden2, codigoCodec, 1.0);
+            agregarLineaOrden(orden2, codigoCigarros, 2.0);
+
+            int orden3 = crearOrdenVacia("3-3333-3333");
+            agregarLineaOrden(orden3, codigoBandana, 1.0);
+            agregarLineaOrden(orden3, codigoNanoMaquinas, 5.0);
+            establecerOrdenPendiente(orden3);
+
+            int orden4 = crearOrdenVacia("4-4444-4444");
+            agregarLineaOrden(orden4, codigoCamuflaje, 1.0);
+            agregarLineaOrden(orden4, codigoRacion, 2.0);
+            establecerOrdenTerminada(orden4);
+
+        } catch (Exception e) {
+            System.out.println("Error al cargar datos de prueba: " + e.getMessage());
+        }
     }
     
 }
