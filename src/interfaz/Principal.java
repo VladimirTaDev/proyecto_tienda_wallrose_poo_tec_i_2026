@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
 import javax.swing.JLabel;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 public class Principal {
 
@@ -28,6 +30,7 @@ public class Principal {
 	private JTable tablaProductos;
 	private JTable tablaOrdenes;
 	private JLabel lblTotalPendiente;
+	//private final Action action = new SwingAction();
 
 	/**
 	 * Launch the application.
@@ -60,37 +63,20 @@ public class Principal {
 		frmTiendaWallrose = new JFrame();
 		frmTiendaWallrose.setResizable(false);
 		frmTiendaWallrose.setTitle("Tienda WallRose");
-		frmTiendaWallrose.setBounds(100, 100, 450, 347);
+		frmTiendaWallrose.setBounds(100, 100, 850, 520);
 		frmTiendaWallrose.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTiendaWallrose.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		frmTiendaWallrose.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
-		JPanel Clientes = new JPanel();
-		tabbedPane.addTab("Clientes", null, Clientes, null);
-		Clientes.setLayout(null);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 429, 280);
-		Clientes.add(scrollPane);
-		
-		tablaClientes = new JTable();
-		tablaClientes.setModel(new DefaultTableModel(
-			    new Object[][] {},
-			    new String[] {
-			        "ID", "Nombre", "Email"
-			    }
-			));
-		scrollPane.setViewportView(tablaClientes);
-		
-		JPanel Productos = new JPanel();
-		tabbedPane.addTab("Productos", null, Productos, null);
-		Productos.setLayout(null);
+		JPanel panelProductos = new JPanel();
+		tabbedPane.addTab("Productos", null, panelProductos, null);
+		panelProductos.setLayout(null);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(0, 11, 429, 269);
-		Productos.add(scrollPane_1);
+		panelProductos.add(scrollPane_1);
 		
 		tablaProductos = new JTable();
 		tablaProductos.setModel(new DefaultTableModel(
@@ -101,21 +87,21 @@ public class Principal {
 			));
 		scrollPane_1.setViewportView(tablaProductos);
 		
-		JPanel Órdenes = new JPanel();
-		tabbedPane.addTab("Órdenes", null, Órdenes, null);
-		Órdenes.setLayout(null);
+		JPanel panelOrdenes = new JPanel();
+		tabbedPane.addTab("Órdenes", null, panelOrdenes, null);
+		panelOrdenes.setLayout(null);
 		
 		JLabel lblTotalPendienteFijo = new JLabel("Total pendiente:");
 		lblTotalPendienteFijo.setBounds(87, 256, 91, 24);
-		Órdenes.add(lblTotalPendienteFijo);
+		panelOrdenes.add(lblTotalPendienteFijo);
 		
 		lblTotalPendiente = new JLabel("0.0");
 		lblTotalPendiente.setBounds(185, 256, 99, 24);
-		Órdenes.add(lblTotalPendiente);
+		panelOrdenes.add(lblTotalPendiente);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(0, 0, 429, 280);
-		Órdenes.add(scrollPane_2);
+		panelOrdenes.add(scrollPane_2);
 		
 		tablaOrdenes = new JTable();
 		tablaOrdenes.setModel(new DefaultTableModel(
@@ -125,6 +111,59 @@ public class Principal {
 			    }
 			));
 		scrollPane_2.setViewportView(tablaOrdenes);
+		
+		JPanel panelClientes = new JPanel();
+		tabbedPane.addTab("Clientes", null, panelClientes, null);
+		panelClientes.setLayout(null);
+		
+		JButton btnVerCliente = new JButton("Ver");
+		btnVerCliente.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	JOptionPane.showMessageDialog(frmTiendaWallrose, "Ver cliente todavía no implementado.");
+		    }
+		});
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 0, 718, 453);
+		panelClientes.add(scrollPane);
+		
+		tablaClientes = new JTable();
+		tablaClientes.setModel(new DefaultTableModel(
+			    new Object[][] {},
+			    new String[] {
+			        "ID", "Nombre", "Email"
+			    }
+			));
+		scrollPane.setViewportView(tablaClientes);
+		btnVerCliente.setBounds(728, 3, 101, 33);
+		panelClientes.add(btnVerCliente);
+		
+		JButton btnAgregarCliente = new JButton("Agregar");
+		btnAgregarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Agregar cliente todavía no implementado.");
+			}
+		});
+		btnAgregarCliente.setBounds(728, 47, 101, 33);
+		panelClientes.add(btnAgregarCliente);
+		
+		JButton btnEditarCliente = new JButton("Editar");
+		btnEditarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Editar cliente todavía no implementado.");
+			}
+		});
+		btnEditarCliente.setBounds(728, 91, 101, 33);
+		panelClientes.add(btnEditarCliente);
+		
+		JButton btnBorrarCliente = new JButton("Borrar");
+		btnBorrarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar cliente todavía no implementado.");
+			}
+		});
+		btnBorrarCliente.setBounds(728, 135, 101, 33);
+		panelClientes.add(btnBorrarCliente);
 	}
 	
 	private void cargarClientes() {
@@ -208,15 +247,5 @@ public class Principal {
 	    DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
 	    return (String) model.getValueAt(fila, 0);
 	}
-	
-	/*
-	private void verCliente() {
-	    String idCliente = obtenerIdClienteSeleccionado();
 
-	    if (idCliente != null) {
-	        DetalleCliente ventana = new DetalleCliente(idCliente);
-	        ventana.setVisible(true);
-	    }
-	}
-	*/
 }
