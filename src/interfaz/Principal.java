@@ -20,8 +20,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
 import javax.swing.JLabel;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 
 public class Principal {
 
@@ -121,31 +119,61 @@ public class Principal {
 		btnBorrarProducto.setBounds(680, 150, 120, 25);
 		panelProductos.add(btnBorrarProducto);
 		
+		
+		// Órdenes, panel
 		JPanel panelOrdenes = new JPanel();
 		tabbedPane.addTab("Órdenes", null, panelOrdenes, null);
 		panelOrdenes.setLayout(null);
-		
-		JLabel lblTotalPendienteFijo = new JLabel("Total pendiente:");
-		lblTotalPendienteFijo.setBounds(87, 256, 91, 24);
-		panelOrdenes.add(lblTotalPendienteFijo);
-		
-		lblTotalPendiente = new JLabel("0.0");
-		lblTotalPendiente.setBounds(185, 256, 99, 24);
-		panelOrdenes.add(lblTotalPendiente);
-		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(0, 0, 429, 280);
-		panelOrdenes.add(scrollPane_2);
-		
+
+		JScrollPane scrollOrdenes = new JScrollPane();
+		scrollOrdenes.setBounds(10, 10, 650, 370);
+		panelOrdenes.add(scrollOrdenes);
+
 		tablaOrdenes = new JTable();
 		tablaOrdenes.setModel(new DefaultTableModel(
-			    new Object[][] {},
-			    new String[] {
-			        "Número", "Fecha", "ID Cliente", "Cliente", "Estado", "Total"
-			    }
-			));
-		scrollPane_2.setViewportView(tablaOrdenes);
+		    new Object[][] {},
+		    new String[] { "Número", "Fecha", "ID Cliente", "Cliente", "Estado", "Total" }
+		));
+		scrollOrdenes.setViewportView(tablaOrdenes);
+
+		JLabel lblTotalPendienteFijo = new JLabel("Total pendiente:");
+		lblTotalPendienteFijo.setBounds(10, 400, 120, 25);
+		panelOrdenes.add(lblTotalPendienteFijo);
+
+		lblTotalPendiente = new JLabel("0.0");
+		lblTotalPendiente.setBounds(130, 400, 150, 25);
+		panelOrdenes.add(lblTotalPendiente);
+
+		// Botones de órdenes
+		JButton btnCrearOrden = new JButton("Crear");
+		btnCrearOrden.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Crear orden todavía no implementado.");
+		    }
+		});
+		btnCrearOrden.setBounds(680, 30, 120, 25);
+		panelOrdenes.add(btnCrearOrden);
+
+		JButton btnVerOrden = new JButton("Ver");
+		btnVerOrden.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Ver orden todavía no implementado.");
+		    }
+		});
+		btnVerOrden.setBounds(680, 70, 120, 25);
+		panelOrdenes.add(btnVerOrden);
+
+		JButton btnBorrarOrden = new JButton("Borrar");
+		btnBorrarOrden.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar orden todavía no implementado.");
+		    }
+		});
+		btnBorrarOrden.setBounds(680, 110, 120, 25);
+		panelOrdenes.add(btnBorrarOrden);
+		// Fin botones órdenes
 		
+		// Clientes, panel
 		JPanel panelClientes = new JPanel();
 		tabbedPane.addTab("Clientes", null, panelClientes, null);
 		panelClientes.setLayout(null);
@@ -158,7 +186,7 @@ public class Principal {
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 718, 453);
+		scrollPane.setBounds(10, 10, 650, 410);
 		panelClientes.add(scrollPane);
 		
 		tablaClientes = new JTable();
@@ -169,7 +197,7 @@ public class Principal {
 			    }
 			));
 		scrollPane.setViewportView(tablaClientes);
-		btnVerCliente.setBounds(728, 3, 101, 33);
+		btnVerCliente.setBounds(680, 30, 120, 25);
 		panelClientes.add(btnVerCliente);
 		
 		JButton btnAgregarCliente = new JButton("Agregar");
@@ -178,7 +206,7 @@ public class Principal {
 				JOptionPane.showMessageDialog(frmTiendaWallrose, "Agregar cliente todavía no implementado.");
 			}
 		});
-		btnAgregarCliente.setBounds(728, 47, 101, 33);
+		btnAgregarCliente.setBounds(680, 70, 120, 25);
 		panelClientes.add(btnAgregarCliente);
 		
 		JButton btnEditarCliente = new JButton("Editar");
@@ -187,7 +215,7 @@ public class Principal {
 				JOptionPane.showMessageDialog(frmTiendaWallrose, "Editar cliente todavía no implementado.");
 			}
 		});
-		btnEditarCliente.setBounds(728, 91, 101, 33);
+		btnEditarCliente.setBounds(680, 110, 120, 25);
 		panelClientes.add(btnEditarCliente);
 		
 		JButton btnBorrarCliente = new JButton("Borrar");
@@ -196,7 +224,7 @@ public class Principal {
 				JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar cliente todavía no implementado.");
 			}
 		});
-		btnBorrarCliente.setBounds(728, 135, 101, 33);
+		btnBorrarCliente.setBounds(680, 150, 120, 25);
 		panelClientes.add(btnBorrarCliente);
 	}
 	
