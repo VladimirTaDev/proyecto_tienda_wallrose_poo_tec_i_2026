@@ -73,19 +73,53 @@ public class Principal {
 		JPanel panelProductos = new JPanel();
 		tabbedPane.addTab("Productos", null, panelProductos, null);
 		panelProductos.setLayout(null);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(0, 11, 429, 269);
-		panelProductos.add(scrollPane_1);
-		
+
+		JScrollPane scrollProductos = new JScrollPane();
+		scrollProductos.setBounds(10, 10, 650, 410);
+		panelProductos.add(scrollProductos);
+
 		tablaProductos = new JTable();
 		tablaProductos.setModel(new DefaultTableModel(
-			    new Object[][] {},
-			    new String[] {
-			        "Código", "Nombre", "Existencias", "Unidad", "Precio"
-			    }
-			));
-		scrollPane_1.setViewportView(tablaProductos);
+		    new Object[][] {},
+		    new String[] { "Código", "Nombre", "Existencias", "Unidad", "Precio" }
+		));
+		scrollProductos.setViewportView(tablaProductos);
+
+		JButton btnVerProducto = new JButton("Ver");
+		btnVerProducto.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Ver producto todavía no implementado.");
+		    }
+		});
+		btnVerProducto.setBounds(680, 30, 120, 25);
+		panelProductos.add(btnVerProducto);
+
+		JButton btnAgregarProducto = new JButton("Agregar");
+		btnAgregarProducto.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Agregar producto todavía no implementado.");
+		    }
+		});
+		btnAgregarProducto.setBounds(680, 70, 120, 25);
+		panelProductos.add(btnAgregarProducto);
+
+		JButton btnEditarProducto = new JButton("Editar");
+		btnEditarProducto.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Editar producto todavía no implementado.");
+		    }
+		});
+		btnEditarProducto.setBounds(680, 110, 120, 25);
+		panelProductos.add(btnEditarProducto);
+
+		JButton btnBorrarProducto = new JButton("Borrar");
+		btnBorrarProducto.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar producto todavía no implementado.");
+		    }
+		});
+		btnBorrarProducto.setBounds(680, 150, 120, 25);
+		panelProductos.add(btnBorrarProducto);
 		
 		JPanel panelOrdenes = new JPanel();
 		tabbedPane.addTab("Órdenes", null, panelOrdenes, null);
