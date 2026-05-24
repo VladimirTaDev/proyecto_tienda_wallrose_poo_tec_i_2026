@@ -181,7 +181,7 @@ public class Principal {
 		JButton btnVerCliente = new JButton("Ver");
 		btnVerCliente.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	JOptionPane.showMessageDialog(frmTiendaWallrose, "Ver cliente todavía no implementado.");
+		    	verCliente();
 		    }
 		});
 		
@@ -195,7 +195,13 @@ public class Principal {
 			    new String[] {
 			        "ID", "Nombre", "Email"
 			    }
-			));
+			) {
+			    private static final long serialVersionUID = 1L;
+			    @Override
+			    public boolean isCellEditable(int row, int column) {
+			        return false;
+			    }
+			});
 		scrollPane.setViewportView(tablaClientes);
 		btnVerCliente.setBounds(680, 30, 120, 25);
 		panelClientes.add(btnVerCliente);
@@ -294,20 +300,44 @@ public class Principal {
 	
 	private String obtenerIdClienteSeleccionado() {
 	    int fila = tablaClientes.getSelectedRow();
-
 	    if (fila == -1) {
 	        JOptionPane.showMessageDialog(
-	        	frmTiendaWallrose,
+	            frmTiendaWallrose,
 	            "Debe seleccionar un cliente.",
 	            "Error",
 	            JOptionPane.ERROR_MESSAGE
 	        );
-
 	        return null;
 	    }
-
 	    DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
 	    return (String) model.getValueAt(fila, 0);
+	}
+	
+	private void verCliente() {
+	    String idCliente = obtenerIdClienteSeleccionado();
+	    if (idCliente == null) {
+	        return;
+	    }
+	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+	    Cliente cliente = control.obtenerCliente(idCliente);
+	    if (cliente == null) {
+	        JOptionPane.showMessageDialog(
+	            frmTiendaWallrose,
+	            "El cliente seleccionado ya no existe.",
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	        cargarClientes();
+	        return;
+	    }
+	    JOptionPane.showMessageDialog(
+	        frmTiendaWallrose,
+	        "ID: " + cliente.getId()
+	        + "\nNombre: " + cliente.getNombre()
+	        + "\nEmail: " + cliente.getEmail(),
+	        "Cliente",
+	        JOptionPane.INFORMATION_MESSAGE
+	    );
 	}
 
 }
