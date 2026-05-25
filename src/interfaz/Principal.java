@@ -313,32 +313,16 @@ public class Principal {
 	    return (String) model.getValueAt(fila, 0);
 	}
 	
+	// Abre dialog detalle cliente para mostrar la información del cliente seleccionado.
 	private void verCliente() {
-	    String idCliente = obtenerIdClienteSeleccionado();
-	    if (idCliente == null) {
-	        return;
-	    }
-	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-	    Cliente cliente = control.obtenerCliente(idCliente);
-	    if (cliente == null) {
-	        JOptionPane.showMessageDialog(
-	            frmTiendaWallrose,
-	            "El cliente seleccionado ya no existe.",
-	            "Error",
-	            JOptionPane.ERROR_MESSAGE
-	        );
-	        cargarClientes();
-	        return;
-	    }
-	    JOptionPane.showMessageDialog(
-	        frmTiendaWallrose,
-	        "ID: " + cliente.getId()
-	        + "\nNombre: " + cliente.getNombre()
-	        + "\nEmail: " + cliente.getEmail(),
-	        "Cliente",
-	        JOptionPane.INFORMATION_MESSAGE
-	    );
-	}
+    String idCliente = obtenerIdClienteSeleccionado();
+    if (idCliente == null) {
+        return;
+    }
+    DialogDetalleCliente ventana = new DialogDetalleCliente(idCliente);
+    ventana.setLocationRelativeTo(frmTiendaWallrose);
+    ventana.setVisible(true);
+}
 	
 	// Abre dialog cliente para agregar uno nuevo.
 	private void agregarCliente() {
