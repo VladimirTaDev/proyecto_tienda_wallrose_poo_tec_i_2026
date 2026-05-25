@@ -184,7 +184,22 @@ public class DialogCliente extends JDialog {
 	}
 	
 	private void cargarCliente() {
-	    // TEMPORAL.
+	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+	    Cliente cliente = control.obtenerCliente(idCliente);
+	    if (cliente == null) {
+	        JOptionPane.showMessageDialog(
+	            this,
+	            "No existe el cliente seleccionado.",
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	        dispose();
+	        return;
+	    }
+	    txtId.setText(cliente.getId());
+	    txtNombre.setText(cliente.getNombre());
+	    txtEmail.setText(cliente.getEmail());
+	    txtId.setEditable(false);
 	}
 	
 	private void guardarCliente() {

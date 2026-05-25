@@ -209,7 +209,7 @@ public class Principal {
 		JButton btnAgregarCliente = new JButton("Agregar");
 		btnAgregarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frmTiendaWallrose, "Agregar cliente todavía no implementado.");
+				agregarCliente();
 			}
 		});
 		btnAgregarCliente.setBounds(680, 70, 120, 25);
@@ -218,7 +218,7 @@ public class Principal {
 		JButton btnEditarCliente = new JButton("Editar");
 		btnEditarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frmTiendaWallrose, "Editar cliente todavía no implementado.");
+				editarCliente();
 			}
 		});
 		btnEditarCliente.setBounds(680, 110, 120, 25);
@@ -227,7 +227,7 @@ public class Principal {
 		JButton btnBorrarCliente = new JButton("Borrar");
 		btnBorrarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar cliente todavía no implementado.");
+				borrarCliente();
 			}
 		});
 		btnBorrarCliente.setBounds(680, 150, 120, 25);
@@ -338,6 +338,58 @@ public class Principal {
 	        "Cliente",
 	        JOptionPane.INFORMATION_MESSAGE
 	    );
+	}
+	
+	// Abre dialog cliente para agregar uno nuevo.
+	private void agregarCliente() {
+	    DialogCliente ventana = new DialogCliente(null);
+	    ventana.setVisible(true);
+	    cargarTodo();
+	}
+	
+	// Abre dialog cliente para editar el cliente seleccionado.
+	private void editarCliente() {
+	    String idCliente = obtenerIdClienteSeleccionado();
+	    if (idCliente == null) {
+	        return;
+	    }
+	    DialogCliente ventana = new DialogCliente(idCliente);
+	    ventana.setVisible(true);
+	    cargarTodo();
+	}
+	
+	// Borra el cliente seleccionado, mostrando un mensaje de confirmación.
+	private void borrarCliente() {
+	    String idCliente = obtenerIdClienteSeleccionado();
+	    if (idCliente == null) {
+	        return;
+	    }
+	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+	    Cliente cliente = control.obtenerCliente(idCliente);
+	    String nombreCliente = idCliente;
+	    if (cliente != null) {
+	        nombreCliente = cliente.getNombre();
+	    }
+	    int respuesta = JOptionPane.showConfirmDialog(
+	        frmTiendaWallrose,
+	        "Se eliminará el cliente " + nombreCliente
+	        + " y todas sus órdenes asociadas. ¿Desea continuar?",
+	        "Confirmar",
+	        JOptionPane.YES_NO_OPTION
+	    );
+	    if (respuesta == JOptionPane.YES_OPTION) {
+	        try {
+	            control.borrarCliente(idCliente);
+	            cargarTodo();
+	        } catch (Exception e) {
+	            JOptionPane.showMessageDialog(
+	                frmTiendaWallrose,
+	                "Error al borrar cliente: " + e.getMessage(),
+	                "Error",
+	                JOptionPane.ERROR_MESSAGE
+	            );
+	        }
+	    }
 	}
 
 }
