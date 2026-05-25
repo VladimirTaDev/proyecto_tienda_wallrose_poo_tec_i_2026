@@ -18,6 +18,11 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.BoxLayout;
 import java.awt.Dimension;
+import javax.swing.JOptionPane;
+import control.ControladoraWallRose;
+import logica.Cliente;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DialogCliente extends JDialog {
 
@@ -26,13 +31,15 @@ public class DialogCliente extends JDialog {
 	private JTextField txtId;
 	private JTextField txtNombre;
 	private JTextField txtEmail;
+	private String idCliente;
+	private boolean editando;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			DialogCliente dialog = new DialogCliente();
+			DialogCliente dialog = new DialogCliente(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -43,12 +50,17 @@ public class DialogCliente extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DialogCliente() {
-		setResizable(false);
+	public DialogCliente(String idCliente) {
+		this.idCliente = idCliente;
+	    this.editando = idCliente != null;
+		
+		
+	    setTitle(editando ? "Editar cliente" : "Agregar cliente");
 		setModal(true);
+		setResizable(false);
 		setBounds(new Rectangle(100, 100, 360, 320));
-		setTitle("Cliente");
-		setBounds(100, 100, 416, 136);
+		setTitle(editando ? "Editar cliente" : "Agregar cliente");
+		setBounds(100, 100, 425, 180);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {400, 0};
 		gridBagLayout.rowHeights = new int[] {100, 33, 0};
@@ -144,16 +156,65 @@ public class DialogCliente extends JDialog {
 			getContentPane().add(buttonPane, gbc_buttonPane);
 			{
 				JButton btnGuardar = new JButton("Guardar");
+				btnGuardar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						guardarCliente();
+					}
+				});
 				btnGuardar.setActionCommand("OK");
 				buttonPane.add(btnGuardar);
 				getRootPane().setDefaultButton(btnGuardar);
 			}
 			{
 				JButton btnCancelar = new JButton("Cancelar");
+				btnCancelar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
 		}
+		
+		// Si estamos editando, cargamos los datos del cliente
+		if (editando) {
+	        cargarCliente();
+	    }
+	}
+	
+	private void cargarCliente() {
+	    // TEMPORAL.
+	}
+	
+	private void guardarCliente() {
+	    try {
+	        String id = txtId.getText().trim();
+	        String nombre = txtNombre.getText().trim();
+	        String email = txtEmail.getText().trim();
+	        validarCampos(id, nombre, email);
+	        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+	        if (editando) {
+	            control.actualizarCliente(idCliente, nombre, email);
+	        } else {
+	            control.crearCliente(id, nombre, email);
+	        }
+	        dispose();
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(
+	            this,
+	            "Error al guardar cliente: " + e.getMessage(),
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	    }
+	}
+	
+	// Valida que los campos no estén vacíos
+	private void validarCampos(String id, String nombre, String email) {
+	    if (id.equals("") || nombre.equals("") || email.equals("")) {
+	        throw new IllegalArgumentException("Debe completar todos los campos.");
+	    }
 	}
 
 }
