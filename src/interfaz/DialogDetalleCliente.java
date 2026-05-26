@@ -17,6 +17,8 @@ import logica.Cliente;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
+import java.util.List;
+import logica.OrdenCompra;
 
 public class DialogDetalleCliente extends JDialog {
 
@@ -124,8 +126,9 @@ public class DialogDetalleCliente extends JDialog {
 			contentPanel.add(lblEmail, gbc_lblEmail);
 		}
 		{
-			JLabel lblOrdenes = new JLabel("Lista de órdenes");
+			JLabel lblOrdenes = new JLabel("Lista de órdenes:");
 			GridBagConstraints gbc_lblOrdenes = new GridBagConstraints();
+			gbc_lblOrdenes.anchor = GridBagConstraints.WEST;
 			gbc_lblOrdenes.gridwidth = 7;
 			gbc_lblOrdenes.insets = new Insets(0, 0, 5, 5);
 			gbc_lblOrdenes.gridx = 0;
@@ -198,6 +201,7 @@ public class DialogDetalleCliente extends JDialog {
 		        lblId.setText(cliente.getId());
 		        lblNombre.setText(cliente.getNombre());
 		        lblEmail.setText(cliente.getEmail());
+		        cargarOrdenesCliente();
 		    } catch (Exception e) {
 		        JOptionPane.showMessageDialog(
 		            this,
@@ -206,6 +210,36 @@ public class DialogDetalleCliente extends JDialog {
 		            JOptionPane.ERROR_MESSAGE
 		        );
 		        dispose();
+		    }
+		}
+		
+		// Carga las órdenes de compra del cliente en la tabla
+		private void cargarOrdenesEnTabla(List<OrdenCompra> ordenes) {
+		    DefaultTableModel model = (DefaultTableModel) tablaOrdenesCliente.getModel();
+		    model.setRowCount(0);
+		    for (OrdenCompra orden : ordenes) {
+		        Object[] fila = new Object[] {
+		            orden.getNumero(),
+		            orden.getFecha(),
+		            orden.getEstado().name()
+		        };
+		        model.addRow(fila);
+		    }
+		}
+		
+		// Obtiene las órdenes de compra del cliente y las muestra en la tabla
+		private void cargarOrdenesCliente() {
+		    try {
+		        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		        List<OrdenCompra> ordenes = control.obtenerListadoOrdenesCliente(idCliente);
+		        cargarOrdenesEnTabla(ordenes);
+		    } catch (Exception e) {
+		        JOptionPane.showMessageDialog(
+		            this,
+		            "Error al cargar órdenes del cliente: " + e.getMessage(),
+		            "Error",
+		            JOptionPane.ERROR_MESSAGE
+		        );
 		    }
 		}
 
