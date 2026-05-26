@@ -31,7 +31,6 @@ public class DialogDetalleCliente extends JDialog {
 	private JLabel lblNombre;
 	private JLabel lblId;
 	private String idCliente;
-	private JTable table;
 	private JTable tablaOrdenesCliente;
 	private JLabel lblTotalPendiente;
 
@@ -234,6 +233,7 @@ public class DialogDetalleCliente extends JDialog {
 		{
 			JLabel lblTotalPendienteFijo = new JLabel("Total pendiente:");
 			GridBagConstraints gbc_lblTotalPendienteFijo = new GridBagConstraints();
+			gbc_lblTotalPendienteFijo.anchor = GridBagConstraints.EAST;
 			gbc_lblTotalPendienteFijo.insets = new Insets(0, 0, 0, 5);
 			gbc_lblTotalPendienteFijo.gridx = 0;
 			gbc_lblTotalPendienteFijo.gridy = 5;
@@ -242,35 +242,25 @@ public class DialogDetalleCliente extends JDialog {
 		{
 			lblTotalPendiente = new JLabel("");
 			GridBagConstraints gbc_lblTotalPendiente = new GridBagConstraints();
+			gbc_lblTotalPendiente.insets = new Insets(0, 0, 0, 5);
 			gbc_lblTotalPendiente.anchor = GridBagConstraints.WEST;
-			gbc_lblTotalPendiente.gridwidth = 6;
+			gbc_lblTotalPendiente.gridwidth = 4;
 			gbc_lblTotalPendiente.gridx = 1;
 			gbc_lblTotalPendiente.gridy = 5;
 			contentPanel.add(lblTotalPendiente, gbc_lblTotalPendiente);
 		}
 		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
-		}
-		{
-			JPanel infoPanel = new JPanel();
-			getContentPane().add(infoPanel, BorderLayout.NORTH);
-			{
-				table = new JTable();
-				infoPanel.add(table);
-			}
+			JButton btnCerrar = new JButton("Cerrar");
+			btnCerrar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
+			GridBagConstraints gbc_btnCerrar = new GridBagConstraints();
+			gbc_btnCerrar.gridx = 6;
+			gbc_btnCerrar.gridy = 5;
+			contentPanel.add(btnCerrar, gbc_btnCerrar);
+			btnCerrar.setActionCommand("Cancel");
 		}
 		
 		if (idCliente != null) {

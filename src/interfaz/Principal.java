@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
 import javax.swing.JLabel;
+import javax.swing.ListSelectionModel;
 
 public class Principal {
 
@@ -81,12 +82,15 @@ public class Principal {
 		    new Object[][] {},
 		    new String[] { "Código", "Nombre", "Existencias", "Unidad", "Precio" }
 		));
+		tablaProductos.setDefaultEditor(Object.class, null);
+		tablaProductos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
 		scrollProductos.setViewportView(tablaProductos);
 
 		JButton btnVerProducto = new JButton("Ver");
 		btnVerProducto.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Ver producto todavía no implementado.");
+		    	verProducto();
 		    }
 		});
 		btnVerProducto.setBounds(680, 30, 120, 25);
@@ -375,5 +379,51 @@ public class Principal {
 	        }
 	    }
 	}
+	
+	// Obtiene código del producto seleccionado.
+	private Integer obtenerCodigoProductoSeleccionado() {
+		int fila = tablaProductos.getSelectedRow();
+		if (fila == -1) {
+		JOptionPane.showMessageDialog(
+		frmTiendaWallrose,
+		"Debe seleccionar un producto.",
+		"Error",
+		JOptionPane.ERROR_MESSAGE
+		);
+		return null;
+		}
+		DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
+		return (Integer) model.getValueAt(fila, 0);
+		}
+	
+	
+	private void verProducto() {
+		Integer codigoProducto = obtenerCodigoProductoSeleccionado();
+		if (codigoProducto == null) {
+		return;
+		}
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		Producto producto = control.obtenerProducto(codigoProducto);
+		if (producto == null) {
+		JOptionPane.showMessageDialog(
+		frmTiendaWallrose,
+		"El producto seleccionado ya no existe.",
+		"Error",
+		JOptionPane.ERROR_MESSAGE
+		);
+		cargarProductos();
+		return;
+		}
+		JOptionPane.showMessageDialog(
+		frmTiendaWallrose,
+		"Código: " + producto.getCodigo()
+		+ "\nNombre: " + producto.getNombre()
+		+ "\nExistencias: " + producto.getExistencias()
+		+ "\nUnidad: " + producto.getUnidad()
+		+ "\nPrecio: " + producto.getPrecio(),
+		"Producto",
+		JOptionPane.INFORMATION_MESSAGE
+		);
+		}
 
 }
