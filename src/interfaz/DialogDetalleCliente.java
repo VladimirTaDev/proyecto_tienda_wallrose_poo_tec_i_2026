@@ -19,6 +19,9 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import logica.OrdenCompra;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DialogDetalleCliente extends JDialog {
 
@@ -30,6 +33,7 @@ public class DialogDetalleCliente extends JDialog {
 	private String idCliente;
 	private JTable table;
 	private JTable tablaOrdenesCliente;
+	private JLabel lblTotalPendiente;
 
 	/**
 	 * Launch the application.
@@ -57,15 +61,15 @@ public class DialogDetalleCliente extends JDialog {
 		setModal(true);
 		setResizable(false);
 		setTitle("Detalle cliente");
-		setBounds(100, 100, 483, 517);
+		setBounds(100, 100, 630, 630);
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.columnWidths = new int[] {54, 46, 46, 46, 46, 46, 46};
-		gbl_contentPanel.rowHeights = new int[] {14, 0, 0, 1, 0};
-		gbl_contentPanel.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		gbl_contentPanel.rowHeights = new int[] {14, 0, 0, 1, 0, 30};
+		gbl_contentPanel.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
 		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0};
 		contentPanel.setLayout(gbl_contentPanel);
 		{
@@ -130,7 +134,7 @@ public class DialogDetalleCliente extends JDialog {
 			GridBagConstraints gbc_lblOrdenes = new GridBagConstraints();
 			gbc_lblOrdenes.anchor = GridBagConstraints.WEST;
 			gbc_lblOrdenes.gridwidth = 7;
-			gbc_lblOrdenes.insets = new Insets(0, 0, 5, 5);
+			gbc_lblOrdenes.insets = new Insets(0, 0, 5, 0);
 			gbc_lblOrdenes.gridx = 0;
 			gbc_lblOrdenes.gridy = 3;
 			contentPanel.add(lblOrdenes, gbc_lblOrdenes);
@@ -138,7 +142,8 @@ public class DialogDetalleCliente extends JDialog {
 		{
 			JScrollPane scrollOrdenes = new JScrollPane();
 			GridBagConstraints gbc_scrollOrdenes = new GridBagConstraints();
-			gbc_scrollOrdenes.gridwidth = 7;
+			gbc_scrollOrdenes.insets = new Insets(0, 0, 5, 5);
+			gbc_scrollOrdenes.gridwidth = 6;
 			gbc_scrollOrdenes.fill = GridBagConstraints.BOTH;
 			gbc_scrollOrdenes.gridx = 0;
 			gbc_scrollOrdenes.gridy = 4;
@@ -159,6 +164,89 @@ public class DialogDetalleCliente extends JDialog {
 					});
 				scrollOrdenes.setViewportView(tablaOrdenesCliente);
 			}
+		}
+		{
+			JPanel filterPanel = new JPanel();
+			GridBagConstraints gbc_filterPanel = new GridBagConstraints();
+			gbc_filterPanel.insets = new Insets(0, 0, 5, 0);
+			gbc_filterPanel.fill = GridBagConstraints.BOTH;
+			gbc_filterPanel.gridx = 6;
+			gbc_filterPanel.gridy = 4;
+			contentPanel.add(filterPanel, gbc_filterPanel);
+			GridBagLayout gbl_filterPanel = new GridBagLayout();
+			gbl_filterPanel.columnWidths = new int[] {30};
+			gbl_filterPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
+			gbl_filterPanel.columnWeights = new double[]{0.0};
+			gbl_filterPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+			filterPanel.setLayout(gbl_filterPanel);
+			{
+				JButton btnTodas = new JButton("Todas");
+				btnTodas.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						cargarOrdenesCliente();
+					}
+				});
+				GridBagConstraints gbc_btnTodas = new GridBagConstraints();
+				gbc_btnTodas.insets = new Insets(0, 0, 5, 0);
+				gbc_btnTodas.gridx = 0;
+				gbc_btnTodas.gridy = 1;
+				filterPanel.add(btnTodas, gbc_btnTodas);
+			}
+			{
+				JButton btnIniciadas = new JButton("Iniciadas");
+				btnIniciadas.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						cargarOrdenesIniciadasCliente();
+					}
+				});
+				GridBagConstraints gbc_btnIniciadas = new GridBagConstraints();
+				gbc_btnIniciadas.insets = new Insets(0, 0, 5, 0);
+				gbc_btnIniciadas.gridx = 0;
+				gbc_btnIniciadas.gridy = 3;
+				filterPanel.add(btnIniciadas, gbc_btnIniciadas);
+			}
+			{
+				JButton btnPendientes = new JButton("Pendientes");
+				btnPendientes.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						cargarOrdenesPendientesCliente();
+					}
+				});
+				GridBagConstraints gbc_btnPendientes = new GridBagConstraints();
+				gbc_btnPendientes.insets = new Insets(0, 0, 5, 0);
+				gbc_btnPendientes.gridx = 0;
+				gbc_btnPendientes.gridy = 5;
+				filterPanel.add(btnPendientes, gbc_btnPendientes);
+			}
+			{
+				JButton btnTerminadas = new JButton("Terminadas");
+				btnTerminadas.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						cargarOrdenesTerminadasCliente();
+					}
+				});
+				GridBagConstraints gbc_btnTerminadas = new GridBagConstraints();
+				gbc_btnTerminadas.gridx = 0;
+				gbc_btnTerminadas.gridy = 7;
+				filterPanel.add(btnTerminadas, gbc_btnTerminadas);
+			}
+		}
+		{
+			JLabel lblTotalPendienteFijo = new JLabel("Total pendiente:");
+			GridBagConstraints gbc_lblTotalPendienteFijo = new GridBagConstraints();
+			gbc_lblTotalPendienteFijo.insets = new Insets(0, 0, 0, 5);
+			gbc_lblTotalPendienteFijo.gridx = 0;
+			gbc_lblTotalPendienteFijo.gridy = 5;
+			contentPanel.add(lblTotalPendienteFijo, gbc_lblTotalPendienteFijo);
+		}
+		{
+			lblTotalPendiente = new JLabel("");
+			GridBagConstraints gbc_lblTotalPendiente = new GridBagConstraints();
+			gbc_lblTotalPendiente.anchor = GridBagConstraints.WEST;
+			gbc_lblTotalPendiente.gridwidth = 6;
+			gbc_lblTotalPendiente.gridx = 1;
+			gbc_lblTotalPendiente.gridy = 5;
+			contentPanel.add(lblTotalPendiente, gbc_lblTotalPendiente);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -201,6 +289,7 @@ public class DialogDetalleCliente extends JDialog {
 		        lblId.setText(cliente.getId());
 		        lblNombre.setText(cliente.getNombre());
 		        lblEmail.setText(cliente.getEmail());
+		        lblTotalPendiente.setText(String.valueOf(cliente.calcularMontoPendiente()));
 		        cargarOrdenesCliente();
 		    } catch (Exception e) {
 		        JOptionPane.showMessageDialog(
@@ -237,6 +326,54 @@ public class DialogDetalleCliente extends JDialog {
 		        JOptionPane.showMessageDialog(
 		            this,
 		            "Error al cargar órdenes del cliente: " + e.getMessage(),
+		            "Error",
+		            JOptionPane.ERROR_MESSAGE
+		        );
+		    }
+		}
+		
+		// Carga las órdenes de compra iniciadas del cliente en la tabla
+		private void cargarOrdenesIniciadasCliente() {
+		    try {
+		        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		        List<OrdenCompra> ordenes = control.obtenerListadoOrdenesIniciadasCliente(idCliente);
+		        cargarOrdenesEnTabla(ordenes);
+		    } catch (Exception e) {
+		        JOptionPane.showMessageDialog(
+		            this,
+		            "Error al cargar órdenes iniciadas: " + e.getMessage(),
+		            "Error",
+		            JOptionPane.ERROR_MESSAGE
+		        );
+		    }
+		}
+
+		// Carga las órdenes de compra pendientes del cliente en la tabla
+		private void cargarOrdenesPendientesCliente() {
+		    try {
+		        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		        List<OrdenCompra> ordenes = control.obtenerListadoOrdenesPendientesCliente(idCliente);
+		        cargarOrdenesEnTabla(ordenes);
+		    } catch (Exception e) {
+		        JOptionPane.showMessageDialog(
+		            this,
+		            "Error al cargar órdenes pendientes: " + e.getMessage(),
+		            "Error",
+		            JOptionPane.ERROR_MESSAGE
+		        );
+		    }
+		}
+
+		// Carga las órdenes de compra pendientes del cliente en la tabla
+		private void cargarOrdenesTerminadasCliente() {
+		    try {
+		        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		        List<OrdenCompra> ordenes = control.obtenerListadoOrdenesTerminadasCliente(idCliente);
+		        cargarOrdenesEnTabla(ordenes);
+		    } catch (Exception e) {
+		        JOptionPane.showMessageDialog(
+		            this,
+		            "Error al cargar órdenes terminadas: " + e.getMessage(),
 		            "Error",
 		            JOptionPane.ERROR_MESSAGE
 		        );
