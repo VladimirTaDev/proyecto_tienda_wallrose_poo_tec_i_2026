@@ -8,6 +8,18 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import control.ControladoraWallRose;
+import logica.OrdenCompra;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+import logica.LineaOrden;
+import logica.Producto;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 
 public class DetalleOrden extends JDialog {
 
@@ -22,7 +34,8 @@ public class DetalleOrden extends JDialog {
 	private JLabel lblMonto;
 	private JLabel lblImpuesto;
 	private JLabel lblTotal;
-
+	private JTable tablaLineas;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -47,6 +60,10 @@ public class DetalleOrden extends JDialog {
 	public DetalleOrden(Integer numeroOrden) {
         this.numeroOrden = numeroOrden;
         initUI();
+        
+        if (numeroOrden != null) {
+            cargarDatosOrden();
+        }
     }
 
     private void initUI() {
@@ -105,6 +122,29 @@ public class DetalleOrden extends JDialog {
         lblTotal.setBounds(130, 410, 150, 25);
         getContentPane().add(lblTotal);
         
+        JLabel lblLineas = new JLabel("Líneas de la orden:");
+        lblLineas.setBounds(20, 150, 150, 25);
+        getContentPane().add(lblLineas);
+
+        JScrollPane scrollLineas = new JScrollPane();
+        scrollLineas.setBounds(20, 180, 590, 150);
+        getContentPane().add(scrollLineas);
+
+        tablaLineas = new JTable();
+        tablaLineas.setModel(new DefaultTableModel(
+            new Object[][] {},
+            new String[] {
+                "Línea", "Código", "Producto", "Cantidad", "Unidad", "Costo"
+            }
+        ) {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
+        scrollLineas.setViewportView(tablaLineas);
+                
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
 			JPanel buttonPane = new JPanel();
@@ -122,6 +162,51 @@ public class DetalleOrden extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		
+		JButton btnCerrar = new JButton("Cerrar");
+		btnCerrar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        dispose();
+		    }
+		});
+		btnCerrar.setBounds(490, 405, 120, 25);
+		getContentPane().add(btnCerrar);
     }
+    
+	private void cargarDatosOrden() {
+		try {
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			OrdenCompra orden = control.obtenerOrdenCompra(numeroOrden);
+			if (orden == null) {
+				throw new IllegalArgumentException("No existe la orden seleccionada.");
+			}
+			lblNumero.setText(String.valueOf(orden.getNumero()));
+			lblCliente.setText(orden.getCliente().getId() + " - " + orden.getCliente().getNombre());
+			lblFecha.setText(String.valueOf(orden.getFecha()));
+			lblEstado.setText(orden.getEstado().name());
+			lblMonto.setText(String.valueOf(orden.calcularMonto()));
+			lblImpuesto.setText(String.valueOf(orden.calcularMontoImpuesto()));
+			lblTotal.setText(String.valueOf(orden.calcularTotal()));
+			cargarLineas();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al cargar orden: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+			dispose();
+		}
+	}
+
+	private void cargarLineas() {
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		DefaultTableModel model = (DefaultTableModel) tablaLineas.getModel();
+		model.setRowCount(0);
+		List<LineaOrden> lineas = control.obtenerLineasOrden(numeroOrden);
+		for (int i = 0; i < lineas.size(); i++) {
+			LineaOrden linea = lineas.get(i);
+			Producto producto = linea.getProducto();
+			Object[] fila = new Object[] { i + 1, producto.getCodigo(), producto.getNombre(), linea.getCantidad(),
+					producto.getUnidad(), linea.calcularCosto() };
+			model.addRow(fila);
+		}
+	}
 
 }

@@ -437,32 +437,14 @@ public class Principal {
 	}
 	
 	private void verOrden() {
-	    Integer numeroOrden = obtenerNumeroOrdenSeleccionada();
-	    if (numeroOrden == null) {
-	        return;
-	    }
-	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-	    OrdenCompra orden = control.obtenerOrdenCompra(numeroOrden);
-	    if (orden == null) {
-	        JOptionPane.showMessageDialog(
-	            frmTiendaWallrose,
-	            "La orden seleccionada ya no existe.",
-	            "Error",
-	            JOptionPane.ERROR_MESSAGE
-	        );
-	        cargarOrdenes();
-	        return;
-	    }
-	    JOptionPane.showMessageDialog(
-	        frmTiendaWallrose,
-	        "Número: " + orden.getNumero()
-	            + "\nCliente: " + orden.getCliente().getId() + " - " + orden.getCliente().getNombre()
-	            + "\nFecha: " + orden.getFecha()
-	            + "\nEstado: " + orden.getEstado()
-	            + "\nTotal: " + orden.calcularTotal(),
-	        "Orden",
-	        JOptionPane.INFORMATION_MESSAGE
-	    );
+		Integer numeroOrden = obtenerNumeroOrdenSeleccionada();
+		if (numeroOrden == null) {
+			return;
+		}
+		DetalleOrden ventana = new DetalleOrden(numeroOrden);
+		ventana.setLocationRelativeTo(frmTiendaWallrose);
+		ventana.setVisible(true);
+		cargarTodo();
 	}
 
 }
