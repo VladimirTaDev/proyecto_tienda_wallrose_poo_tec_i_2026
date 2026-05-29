@@ -20,18 +20,18 @@ public class DialogProducto extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	
+
 	private Integer codigoProducto;
 	private boolean editando;
 	private boolean soloLectura;
-	
+
 	private JLabel lblCodigoValor;
 	private JTextField txtNombre;
 	private JTextField txtExistencias;
 	private JComboBox<String> comboUnidad;
 	private JTextField txtPrecio;
 	private JButton btnGuardar;
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -44,14 +44,14 @@ public class DialogProducto extends JDialog {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Create the dialog.
 	 */
 	public DialogProducto() {
 		initUI();
 	}
-	
+
 	private void initUI() {
 		setModal(true);
 		setResizable(false);
@@ -59,7 +59,7 @@ public class DialogProducto extends JDialog {
 		setBounds(100, 100, 380, 300);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
-		
+
 		JLabel lblCodigo = new JLabel("Código:");
 		lblCodigo.setBounds(20, 20, 100, 25);
 		getContentPane().add(lblCodigo);
@@ -102,6 +102,11 @@ public class DialogProducto extends JDialog {
 		getContentPane().add(txtPrecio);
 		txtPrecio.setColumns(10);
 		btnGuardar = new JButton("Guardar");
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				guardarProducto();
+			}
+		});
 		btnGuardar.setBounds(120, 225, 100, 25);
 		getContentPane().add(btnGuardar);
 		JButton btnCancelar = new JButton("Cancelar");
@@ -113,77 +118,98 @@ public class DialogProducto extends JDialog {
 			}
 		});
 	}
-	
+
 	public DialogProducto(Integer codigoProducto, boolean soloLectura) {
 		this.codigoProducto = codigoProducto;
 		this.editando = codigoProducto != null;
 		this.soloLectura = soloLectura;
 		initUI();
-		
-		// Cambia el título y el estado de los campos según el modo (agregar, editar, solo lectura)
+
+		// Cambia el título y el estado de los campos según el modo (agregar, editar,
+		// solo lectura)
 		if (!editando) {
-			cargarProducto();	
 			setTitle("Agregar producto");
 			lblCodigoValor.setText("(automático)");
 		} else if (soloLectura) {
+			cargarProducto();
 			activarModoLectura();
 			setTitle("Ver producto");
 		} else {
+			cargarProducto();
 			setTitle("Editar producto");
 		}
 	}
-	
+
 	private void cargarProducto() {
+		if (codigoProducto == null) {
+	        return;
+	    }
 		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
 		Producto producto = control.obtenerProducto(codigoProducto);
 		if (producto == null) {
-		JOptionPane.showMessageDialog(
-		this,
-		"No existe el producto seleccionado.",
-		"Error",
-		JOptionPane.ERROR_MESSAGE
-		);
-		dispose();
-		return;
+			JOptionPane.showMessageDialog(this, "No existe el producto seleccionado.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			dispose();
+			return;
 		}
 		lblCodigoValor.setText(String.valueOf(producto.getCodigo()));
 		txtNombre.setText(producto.getNombre());
 		txtExistencias.setText(String.valueOf(producto.getExistencias()));
 		comboUnidad.setSelectedItem(producto.getUnidad());
 		txtPrecio.setText(String.valueOf(producto.getPrecio()));
-		}
-	
+	}
+
 	private void activarModoLectura() {
 		txtNombre.setEditable(false);
 		txtExistencias.setEditable(false);
 		comboUnidad.setEnabled(false);
 		txtPrecio.setEditable(false);
 		btnGuardar.setVisible(false);
-		}
-	
+	}
+
 	private double leerDouble(JTextField campo, String nombreCampo) {
 		try {
-		String texto = campo.getText().trim().replace(",", ".");
-		return Double.parseDouble(texto);
+			String texto = campo.getText().trim().replace(",", ".");
+			return Double.parseDouble(texto);
 		} catch (NumberFormatException e) {
-		throw new IllegalArgumentException(nombreCampo + " debe ser un número real.");
+			throw new IllegalArgumentException(nombreCampo + " debe ser un número real.");
 		}
-		}
-	
+	}
+
 	private String obtenerUnidadSeleccionada() {
 		Object item = comboUnidad.getEditor().getItem();
 		if (item == null) {
-		return "";
+			return "";
 		}
 		return item.toString().trim();
-		}
-	
+	}
+
 	private void validarCampos(String nombre, String unidad) {
 		if (nombre.equals("")) {
-		throw new IllegalArgumentException("El nombre no puede estar vacío.");
+			throw new IllegalArgumentException("El nombre no puede estar vacío.");
 		}
 		if (unidad.equals("")) {
-		throw new IllegalArgumentException("La unidad no puede estar vacía.");
+			throw new IllegalArgumentException("La unidad no puede estar vacía.");
 		}
+	}
+
+	private void guardarProducto() {
+		try {
+			String nombre = txtNombre.getText().trim();
+			double existencias = leerDouble(txtExistencias, "Existencias");
+			String unidad = obtenerUnidadSeleccionada();
+			double precio = leerDouble(txtPrecio, "Precio");
+			validarCampos(nombre, unidad);
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			if (editando) {
+				control.actualizarProducto(codigoProducto, nombre, existencias, unidad, precio);
+			} else {
+				control.crearProducto(nombre, existencias, unidad, precio);
+			}
+			dispose();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al guardar producto: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
 		}
+	}
 }

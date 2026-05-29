@@ -29,7 +29,7 @@ public class Principal {
 	private JTable tablaProductos;
 	private JTable tablaOrdenes;
 	private JLabel lblTotalPendiente;
-	//private final Action action = new SwingAction();
+	// private final Action action = new SwingAction();
 
 	/**
 	 * Launch the application.
@@ -65,10 +65,10 @@ public class Principal {
 		frmTiendaWallrose.setBounds(100, 100, 850, 520);
 		frmTiendaWallrose.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTiendaWallrose.getContentPane().setLayout(new BorderLayout(0, 0));
-		
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		frmTiendaWallrose.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-		
+
 		JPanel panelProductos = new JPanel();
 		tabbedPane.addTab("Productos", null, panelProductos, null);
 		panelProductos.setLayout(null);
@@ -78,52 +78,49 @@ public class Principal {
 		panelProductos.add(scrollProductos);
 
 		tablaProductos = new JTable();
-		tablaProductos.setModel(new DefaultTableModel(
-		    new Object[][] {},
-		    new String[] { "Código", "Nombre", "Existencias", "Unidad", "Precio" }
-		));
+		tablaProductos.setModel(new DefaultTableModel(new Object[][] {},
+				new String[] { "Código", "Nombre", "Existencias", "Unidad", "Precio" }));
 		tablaProductos.setDefaultEditor(Object.class, null);
 		tablaProductos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
+
 		scrollProductos.setViewportView(tablaProductos);
 
 		JButton btnVerProducto = new JButton("Ver");
 		btnVerProducto.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	verProducto();
-		    }
+			public void actionPerformed(ActionEvent e) {
+				verProducto();
+			}
 		});
 		btnVerProducto.setBounds(680, 30, 120, 25);
 		panelProductos.add(btnVerProducto);
 
 		JButton btnAgregarProducto = new JButton("Agregar");
 		btnAgregarProducto.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Agregar producto todavía no implementado.");
-		    }
+			public void actionPerformed(ActionEvent e) {
+				agregarProducto();
+			}
 		});
 		btnAgregarProducto.setBounds(680, 70, 120, 25);
 		panelProductos.add(btnAgregarProducto);
 
 		JButton btnEditarProducto = new JButton("Editar");
 		btnEditarProducto.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Editar producto todavía no implementado.");
-		    }
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Editar producto todavía no implementado.");
+			}
 		});
 		btnEditarProducto.setBounds(680, 110, 120, 25);
 		panelProductos.add(btnEditarProducto);
 
 		JButton btnBorrarProducto = new JButton("Borrar");
 		btnBorrarProducto.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar producto todavía no implementado.");
-		    }
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar producto todavía no implementado.");
+			}
 		});
 		btnBorrarProducto.setBounds(680, 150, 120, 25);
 		panelProductos.add(btnBorrarProducto);
-		
-		
+
 		// Órdenes, panel
 		JPanel panelOrdenes = new JPanel();
 		tabbedPane.addTab("Órdenes", null, panelOrdenes, null);
@@ -134,10 +131,8 @@ public class Principal {
 		panelOrdenes.add(scrollOrdenes);
 
 		tablaOrdenes = new JTable();
-		tablaOrdenes.setModel(new DefaultTableModel(
-		    new Object[][] {},
-		    new String[] { "Número", "Fecha", "ID Cliente", "Cliente", "Estado", "Total" }
-		));
+		tablaOrdenes.setModel(new DefaultTableModel(new Object[][] {},
+				new String[] { "Número", "Fecha", "ID Cliente", "Cliente", "Estado", "Total" }));
 		scrollOrdenes.setViewportView(tablaOrdenes);
 
 		JLabel lblTotalPendienteFijo = new JLabel("Total pendiente:");
@@ -151,65 +146,61 @@ public class Principal {
 		// Botones de órdenes
 		JButton btnCrearOrden = new JButton("Crear");
 		btnCrearOrden.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Crear orden todavía no implementado.");
-		    }
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Crear orden todavía no implementado.");
+			}
 		});
 		btnCrearOrden.setBounds(680, 30, 120, 25);
 		panelOrdenes.add(btnCrearOrden);
 
 		JButton btnVerOrden = new JButton("Ver");
 		btnVerOrden.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Ver orden todavía no implementado.");
-		    }
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Ver orden todavía no implementado.");
+			}
 		});
 		btnVerOrden.setBounds(680, 70, 120, 25);
 		panelOrdenes.add(btnVerOrden);
 
 		JButton btnBorrarOrden = new JButton("Borrar");
 		btnBorrarOrden.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar orden todavía no implementado.");
-		    }
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar orden todavía no implementado.");
+			}
 		});
 		btnBorrarOrden.setBounds(680, 110, 120, 25);
 		panelOrdenes.add(btnBorrarOrden);
 		// Fin botones órdenes
-		
+
 		// Clientes, panel
 		JPanel panelClientes = new JPanel();
 		tabbedPane.addTab("Clientes", null, panelClientes, null);
 		panelClientes.setLayout(null);
-		
+
 		JButton btnVerCliente = new JButton("Ver");
 		btnVerCliente.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	verCliente();
-		    }
+			public void actionPerformed(ActionEvent e) {
+				verCliente();
+			}
 		});
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 10, 650, 410);
 		panelClientes.add(scrollPane);
-		
+
 		tablaClientes = new JTable();
-		tablaClientes.setModel(new DefaultTableModel(
-			    new Object[][] {},
-			    new String[] {
-			        "ID", "Nombre", "Email"
-			    }
-			) {
-			    private static final long serialVersionUID = 1L;
-			    @Override
-			    public boolean isCellEditable(int row, int column) {
-			        return false;
-			    }
-			});
+		tablaClientes.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "ID", "Nombre", "Email" }) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		});
 		scrollPane.setViewportView(tablaClientes);
 		btnVerCliente.setBounds(680, 30, 120, 25);
 		panelClientes.add(btnVerCliente);
-		
+
 		JButton btnAgregarCliente = new JButton("Agregar");
 		btnAgregarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -218,7 +209,7 @@ public class Principal {
 		});
 		btnAgregarCliente.setBounds(680, 70, 120, 25);
 		panelClientes.add(btnAgregarCliente);
-		
+
 		JButton btnEditarCliente = new JButton("Editar");
 		btnEditarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -227,7 +218,7 @@ public class Principal {
 		});
 		btnEditarCliente.setBounds(680, 110, 120, 25);
 		panelClientes.add(btnEditarCliente);
-		
+
 		JButton btnBorrarCliente = new JButton("Borrar");
 		btnBorrarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -237,193 +228,160 @@ public class Principal {
 		btnBorrarCliente.setBounds(680, 150, 120, 25);
 		panelClientes.add(btnBorrarCliente);
 	}
-	
+
 	private void cargarClientes() {
-	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
 
-	    DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
-	    model.setRowCount(0);
+		DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
+		model.setRowCount(0);
 
-	    for (Cliente cliente : control.obtenerListadoClientes()) {
-	        Object[] fila = new Object[] {
-	            cliente.getId(),
-	            cliente.getNombre(),
-	            cliente.getEmail()
-	        };
+		for (Cliente cliente : control.obtenerListadoClientes()) {
+			Object[] fila = new Object[] { cliente.getId(), cliente.getNombre(), cliente.getEmail() };
 
-	        model.addRow(fila);
-	    }
+			model.addRow(fila);
+		}
 	}
-	
+
 	private void cargarProductos() {
-	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
 
-	    DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
-	    model.setRowCount(0);
+		DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
+		model.setRowCount(0);
 
-	    for (Producto producto : control.obtenerListadoProductos()) {
-	        Object[] fila = new Object[] {
-	            producto.getCodigo(),
-	            producto.getNombre(),
-	            producto.getExistencias(),
-	            producto.getUnidad(),
-	            producto.getPrecio()
-	        };
+		for (Producto producto : control.obtenerListadoProductos()) {
+			Object[] fila = new Object[] { producto.getCodigo(), producto.getNombre(), producto.getExistencias(),
+					producto.getUnidad(), producto.getPrecio() };
 
-	        model.addRow(fila);
-	    }
+			model.addRow(fila);
+		}
 	}
-	
+
 	private void cargarOrdenes() {
-	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
 
-	    DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
-	    model.setRowCount(0);
+		DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
+		model.setRowCount(0);
 
-	    for (OrdenCompra orden : control.obtenerListadoOrdenes()) {
-	        Object[] fila = new Object[] {
-	            orden.getNumero(),
-	            orden.getFecha(),
-	            orden.getCliente().getId(),
-	            orden.getCliente().getNombre(),
-	            orden.getEstado().name(),
-	            orden.calcularTotal()
-	        };
+		for (OrdenCompra orden : control.obtenerListadoOrdenes()) {
+			Object[] fila = new Object[] { orden.getNumero(), orden.getFecha(), orden.getCliente().getId(),
+					orden.getCliente().getNombre(), orden.getEstado().name(), orden.calcularTotal() };
 
-	        model.addRow(fila);
-	    }
+			model.addRow(fila);
+		}
 
-	    lblTotalPendiente.setText(String.valueOf(control.obtenerMontoTotalPendiente()));
+		lblTotalPendiente.setText(String.valueOf(control.obtenerMontoTotalPendiente()));
 	}
-	
+
 	private void cargarTodo() {
-	    cargarClientes();
-	    cargarProductos();
-	    cargarOrdenes();
-	}	
-	
-	private String obtenerIdClienteSeleccionado() {
-	    int fila = tablaClientes.getSelectedRow();
-	    if (fila == -1) {
-	        JOptionPane.showMessageDialog(
-	            frmTiendaWallrose,
-	            "Debe seleccionar un cliente.",
-	            "Error",
-	            JOptionPane.ERROR_MESSAGE
-	        );
-	        return null;
-	    }
-	    DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
-	    return (String) model.getValueAt(fila, 0);
+		cargarClientes();
+		cargarProductos();
+		cargarOrdenes();
 	}
-	
-	// Abre dialog detalle cliente para mostrar la información del cliente seleccionado.
+
+	private String obtenerIdClienteSeleccionado() {
+		int fila = tablaClientes.getSelectedRow();
+		if (fila == -1) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Debe seleccionar un cliente.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+		DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
+		return (String) model.getValueAt(fila, 0);
+	}
+
+	// Abre dialog detalle cliente para mostrar la información del cliente
+	// seleccionado.
 	private void verCliente() {
-    String idCliente = obtenerIdClienteSeleccionado();
-    if (idCliente == null) {
-        return;
-    }
-    DialogDetalleCliente ventana = new DialogDetalleCliente(idCliente);
-    ventana.setLocationRelativeTo(frmTiendaWallrose);
-    ventana.setVisible(true);
-}
-	
+		String idCliente = obtenerIdClienteSeleccionado();
+		if (idCliente == null) {
+			return;
+		}
+		DialogDetalleCliente ventana = new DialogDetalleCliente(idCliente);
+		ventana.setLocationRelativeTo(frmTiendaWallrose);
+		ventana.setVisible(true);
+	}
+
 	// Abre dialog cliente para agregar uno nuevo.
 	private void agregarCliente() {
-	    DialogCliente ventana = new DialogCliente(null);
-	    ventana.setVisible(true);
-	    cargarTodo();
+		DialogCliente ventana = new DialogCliente(null);
+		ventana.setVisible(true);
+		cargarTodo();
 	}
-	
+
 	// Abre dialog cliente para editar el cliente seleccionado.
 	private void editarCliente() {
-	    String idCliente = obtenerIdClienteSeleccionado();
-	    if (idCliente == null) {
-	        return;
-	    }
-	    DialogCliente ventana = new DialogCliente(idCliente);
-	    ventana.setVisible(true);
-	    cargarTodo();
+		String idCliente = obtenerIdClienteSeleccionado();
+		if (idCliente == null) {
+			return;
+		}
+		DialogCliente ventana = new DialogCliente(idCliente);
+		ventana.setVisible(true);
+		cargarTodo();
 	}
-	
+
 	// Borra el cliente seleccionado, mostrando un mensaje de confirmación.
 	private void borrarCliente() {
-	    String idCliente = obtenerIdClienteSeleccionado();
-	    if (idCliente == null) {
-	        return;
-	    }
-	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-	    Cliente cliente = control.obtenerCliente(idCliente);
-	    String nombreCliente = idCliente;
-	    if (cliente != null) {
-	        nombreCliente = cliente.getNombre();
-	    }
-	    int respuesta = JOptionPane.showConfirmDialog(
-	        frmTiendaWallrose,
-	        "Se eliminará el cliente " + nombreCliente
-	        + " y todas sus órdenes asociadas. ¿Desea continuar?",
-	        "Confirmar",
-	        JOptionPane.YES_NO_OPTION
-	    );
-	    if (respuesta == JOptionPane.YES_OPTION) {
-	        try {
-	            control.borrarCliente(idCliente);
-	            cargarTodo();
-	        } catch (Exception e) {
-	            JOptionPane.showMessageDialog(
-	                frmTiendaWallrose,
-	                "Error al borrar cliente: " + e.getMessage(),
-	                "Error",
-	                JOptionPane.ERROR_MESSAGE
-	            );
-	        }
-	    }
+		String idCliente = obtenerIdClienteSeleccionado();
+		if (idCliente == null) {
+			return;
+		}
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		Cliente cliente = control.obtenerCliente(idCliente);
+		String nombreCliente = idCliente;
+		if (cliente != null) {
+			nombreCliente = cliente.getNombre();
+		}
+		int respuesta = JOptionPane.showConfirmDialog(frmTiendaWallrose,
+				"Se eliminará el cliente " + nombreCliente + " y todas sus órdenes asociadas. ¿Desea continuar?",
+				"Confirmar", JOptionPane.YES_NO_OPTION);
+		if (respuesta == JOptionPane.YES_OPTION) {
+			try {
+				control.borrarCliente(idCliente);
+				cargarTodo();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al borrar cliente: " + e.getMessage(), "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
-	
+
 	// Obtiene código del producto seleccionado.
 	private Integer obtenerCodigoProductoSeleccionado() {
 		int fila = tablaProductos.getSelectedRow();
 		if (fila == -1) {
-		JOptionPane.showMessageDialog(
-		frmTiendaWallrose,
-		"Debe seleccionar un producto.",
-		"Error",
-		JOptionPane.ERROR_MESSAGE
-		);
-		return null;
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Debe seleccionar un producto.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			return null;
 		}
 		DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
 		return (Integer) model.getValueAt(fila, 0);
-		}
-	
-	
+	}
+
 	private void verProducto() {
 		Integer codigoProducto = obtenerCodigoProductoSeleccionado();
 		if (codigoProducto == null) {
-		return;
+			return;
 		}
 		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
 		Producto producto = control.obtenerProducto(codigoProducto);
 		if (producto == null) {
-		JOptionPane.showMessageDialog(
-		frmTiendaWallrose,
-		"El producto seleccionado ya no existe.",
-		"Error",
-		JOptionPane.ERROR_MESSAGE
-		);
-		cargarProductos();
-		return;
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "El producto seleccionado ya no existe.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			cargarProductos();
+			return;
 		}
-		JOptionPane.showMessageDialog(
-		frmTiendaWallrose,
-		"Código: " + producto.getCodigo()
-		+ "\nNombre: " + producto.getNombre()
-		+ "\nExistencias: " + producto.getExistencias()
-		+ "\nUnidad: " + producto.getUnidad()
-		+ "\nPrecio: " + producto.getPrecio(),
-		"Producto",
-		JOptionPane.INFORMATION_MESSAGE
-		);
-		}
+		JOptionPane.showMessageDialog(frmTiendaWallrose,
+				"Código: " + producto.getCodigo() + "\nNombre: " + producto.getNombre() + "\nExistencias: "
+						+ producto.getExistencias() + "\nUnidad: " + producto.getUnidad() + "\nPrecio: "
+						+ producto.getPrecio(),
+				"Producto", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	private void agregarProducto() {
+		DialogProducto ventana = new DialogProducto(null, false);
+		ventana.setLocationRelativeTo(frmTiendaWallrose);
+		ventana.setVisible(true);
+		cargarTodo();
+	}
 
 }

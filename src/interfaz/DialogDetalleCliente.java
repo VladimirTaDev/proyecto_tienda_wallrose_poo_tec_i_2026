@@ -51,25 +51,25 @@ public class DialogDetalleCliente extends JDialog {
 	 * Create the dialog.
 	 */
 	public DialogDetalleCliente() {
-        this(null);
-    }
-	
+		this(null);
+	}
+
 	public DialogDetalleCliente(String idCliente) {
 		this.idCliente = idCliente;
-		
+
 		setModal(true);
 		setResizable(false);
 		setTitle("Detalle cliente");
 		setBounds(100, 100, 630, 630);
-		
+
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.columnWidths = new int[] {54, 46, 46, 46, 46, 46, 46};
-		gbl_contentPanel.rowHeights = new int[] {14, 0, 0, 1, 0, 30};
-		gbl_contentPanel.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
-		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0};
+		gbl_contentPanel.columnWidths = new int[] { 54, 46, 46, 46, 46, 46, 46 };
+		gbl_contentPanel.rowHeights = new int[] { 14, 0, 0, 1, 0, 30 };
+		gbl_contentPanel.columnWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+		gbl_contentPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0 };
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel lblId_text = new JLabel("ID:");
@@ -149,18 +149,15 @@ public class DialogDetalleCliente extends JDialog {
 			contentPanel.add(scrollOrdenes, gbc_scrollOrdenes);
 			{
 				tablaOrdenesCliente = new JTable();
-				tablaOrdenesCliente.setModel(new DefaultTableModel(
-					    new Object[][] {},
-					    new String[] {
-					        "Número", "Fecha", "Estado"
-					    }
-					) {
-					    private static final long serialVersionUID = 1L;
-					    @Override
-					    public boolean isCellEditable(int row, int column) {
-					        return false;
-					    }
-					});
+				tablaOrdenesCliente.setModel(
+						new DefaultTableModel(new Object[][] {}, new String[] { "Número", "Fecha", "Estado" }) {
+							private static final long serialVersionUID = 1L;
+
+							@Override
+							public boolean isCellEditable(int row, int column) {
+								return false;
+							}
+						});
 				scrollOrdenes.setViewportView(tablaOrdenesCliente);
 			}
 		}
@@ -173,10 +170,10 @@ public class DialogDetalleCliente extends JDialog {
 			gbc_filterPanel.gridy = 4;
 			contentPanel.add(filterPanel, gbc_filterPanel);
 			GridBagLayout gbl_filterPanel = new GridBagLayout();
-			gbl_filterPanel.columnWidths = new int[] {30};
-			gbl_filterPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
-			gbl_filterPanel.columnWeights = new double[]{0.0};
-			gbl_filterPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_filterPanel.columnWidths = new int[] { 30 };
+			gbl_filterPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+			gbl_filterPanel.columnWeights = new double[] { 0.0 };
+			gbl_filterPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 			filterPanel.setLayout(gbl_filterPanel);
 			{
 				JButton btnTodas = new JButton("Todas");
@@ -262,112 +259,88 @@ public class DialogDetalleCliente extends JDialog {
 			contentPanel.add(btnCerrar, gbc_btnCerrar);
 			btnCerrar.setActionCommand("Cancel");
 		}
-		
+
 		if (idCliente != null) {
-		    cargarDatosCliente();
+			cargarDatosCliente();
 		}
 	}
-	
-	// Carga los datos del cliente en los campos de texto 
-		private void cargarDatosCliente() {
-		    try {
-		        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-		        Cliente cliente = control.obtenerCliente(idCliente);
-		        if (cliente == null) {
-		            throw new IllegalArgumentException("No existe el cliente seleccionado.");
-		        }
-		        lblId.setText(cliente.getId());
-		        lblNombre.setText(cliente.getNombre());
-		        lblEmail.setText(cliente.getEmail());
-		        lblTotalPendiente.setText(String.valueOf(cliente.calcularMontoPendiente()));
-		        cargarOrdenesCliente();
-		    } catch (Exception e) {
-		        JOptionPane.showMessageDialog(
-		            this,
-		            "Error al cargar cliente: " + e.getMessage(),
-		            "Error",
-		            JOptionPane.ERROR_MESSAGE
-		        );
-		        dispose();
-		    }
-		}
-		
-		// Carga las órdenes de compra del cliente en la tabla
-		private void cargarOrdenesEnTabla(List<OrdenCompra> ordenes) {
-		    DefaultTableModel model = (DefaultTableModel) tablaOrdenesCliente.getModel();
-		    model.setRowCount(0);
-		    for (OrdenCompra orden : ordenes) {
-		        Object[] fila = new Object[] {
-		            orden.getNumero(),
-		            orden.getFecha(),
-		            orden.getEstado().name()
-		        };
-		        model.addRow(fila);
-		    }
-		}
-		
-		// Obtiene las órdenes de compra del cliente y las muestra en la tabla
-		private void cargarOrdenesCliente() {
-		    try {
-		        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-		        List<OrdenCompra> ordenes = control.obtenerListadoOrdenesCliente(idCliente);
-		        cargarOrdenesEnTabla(ordenes);
-		    } catch (Exception e) {
-		        JOptionPane.showMessageDialog(
-		            this,
-		            "Error al cargar órdenes del cliente: " + e.getMessage(),
-		            "Error",
-		            JOptionPane.ERROR_MESSAGE
-		        );
-		    }
-		}
-		
-		// Carga las órdenes de compra iniciadas del cliente en la tabla
-		private void cargarOrdenesIniciadasCliente() {
-		    try {
-		        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-		        List<OrdenCompra> ordenes = control.obtenerListadoOrdenesIniciadasCliente(idCliente);
-		        cargarOrdenesEnTabla(ordenes);
-		    } catch (Exception e) {
-		        JOptionPane.showMessageDialog(
-		            this,
-		            "Error al cargar órdenes iniciadas: " + e.getMessage(),
-		            "Error",
-		            JOptionPane.ERROR_MESSAGE
-		        );
-		    }
-		}
 
-		// Carga las órdenes de compra pendientes del cliente en la tabla
-		private void cargarOrdenesPendientesCliente() {
-		    try {
-		        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-		        List<OrdenCompra> ordenes = control.obtenerListadoOrdenesPendientesCliente(idCliente);
-		        cargarOrdenesEnTabla(ordenes);
-		    } catch (Exception e) {
-		        JOptionPane.showMessageDialog(
-		            this,
-		            "Error al cargar órdenes pendientes: " + e.getMessage(),
-		            "Error",
-		            JOptionPane.ERROR_MESSAGE
-		        );
-		    }
+	// Carga los datos del cliente en los campos de texto
+	private void cargarDatosCliente() {
+		try {
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			Cliente cliente = control.obtenerCliente(idCliente);
+			if (cliente == null) {
+				throw new IllegalArgumentException("No existe el cliente seleccionado.");
+			}
+			lblId.setText(cliente.getId());
+			lblNombre.setText(cliente.getNombre());
+			lblEmail.setText(cliente.getEmail());
+			lblTotalPendiente.setText(String.valueOf(cliente.calcularMontoPendiente()));
+			cargarOrdenesCliente();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al cargar cliente: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+			dispose();
 		}
+	}
 
-		// Carga las órdenes de compra pendientes del cliente en la tabla
-		private void cargarOrdenesTerminadasCliente() {
-		    try {
-		        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-		        List<OrdenCompra> ordenes = control.obtenerListadoOrdenesTerminadasCliente(idCliente);
-		        cargarOrdenesEnTabla(ordenes);
-		    } catch (Exception e) {
-		        JOptionPane.showMessageDialog(
-		            this,
-		            "Error al cargar órdenes terminadas: " + e.getMessage(),
-		            "Error",
-		            JOptionPane.ERROR_MESSAGE
-		        );
-		    }
+	// Carga las órdenes de compra del cliente en la tabla
+	private void cargarOrdenesEnTabla(List<OrdenCompra> ordenes) {
+		DefaultTableModel model = (DefaultTableModel) tablaOrdenesCliente.getModel();
+		model.setRowCount(0);
+		for (OrdenCompra orden : ordenes) {
+			Object[] fila = new Object[] { orden.getNumero(), orden.getFecha(), orden.getEstado().name() };
+			model.addRow(fila);
 		}
+	}
+
+	// Obtiene las órdenes de compra del cliente y las muestra en la tabla
+	private void cargarOrdenesCliente() {
+		try {
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			List<OrdenCompra> ordenes = control.obtenerListadoOrdenesCliente(idCliente);
+			cargarOrdenesEnTabla(ordenes);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al cargar órdenes del cliente: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	// Carga las órdenes de compra iniciadas del cliente en la tabla
+	private void cargarOrdenesIniciadasCliente() {
+		try {
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			List<OrdenCompra> ordenes = control.obtenerListadoOrdenesIniciadasCliente(idCliente);
+			cargarOrdenesEnTabla(ordenes);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al cargar órdenes iniciadas: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	// Carga las órdenes de compra pendientes del cliente en la tabla
+	private void cargarOrdenesPendientesCliente() {
+		try {
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			List<OrdenCompra> ordenes = control.obtenerListadoOrdenesPendientesCliente(idCliente);
+			cargarOrdenesEnTabla(ordenes);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al cargar órdenes pendientes: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	// Carga las órdenes de compra pendientes del cliente en la tabla
+	private void cargarOrdenesTerminadasCliente() {
+		try {
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			List<OrdenCompra> ordenes = control.obtenerListadoOrdenesTerminadasCliente(idCliente);
+			cargarOrdenesEnTabla(ordenes);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al cargar órdenes terminadas: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
 }

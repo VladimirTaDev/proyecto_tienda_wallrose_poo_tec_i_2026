@@ -52,20 +52,19 @@ public class DialogCliente extends JDialog {
 	 */
 	public DialogCliente(String idCliente) {
 		this.idCliente = idCliente;
-	    this.editando = idCliente != null;
-		
-		
-	    setTitle(editando ? "Editar cliente" : "Agregar cliente");
+		this.editando = idCliente != null;
+
+		setTitle(editando ? "Editar cliente" : "Agregar cliente");
 		setModal(true);
 		setResizable(false);
 		setBounds(new Rectangle(100, 100, 360, 320));
 		setTitle(editando ? "Editar cliente" : "Agregar cliente");
 		setBounds(100, 100, 425, 180);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] {400, 0};
-		gridBagLayout.rowHeights = new int[] {100, 33, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 400, 0 };
+		gridBagLayout.rowHeights = new int[] { 100, 33, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		GridBagConstraints gbc_contentPanel = new GridBagConstraints();
@@ -76,10 +75,10 @@ public class DialogCliente extends JDialog {
 		gbc_contentPanel.gridy = 0;
 		getContentPane().add(contentPanel, gbc_contentPanel);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.columnWidths = new int[] {5, 5, 0, 0, 0};
-		gbl_contentPanel.rowHeights = new int[] {25, 0, 0, 0};
-		gbl_contentPanel.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPanel.columnWidths = new int[] { 5, 5, 0, 0, 0 };
+		gbl_contentPanel.rowHeights = new int[] { 25, 0, 0, 0 };
+		gbl_contentPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel lblNewLabel = new JLabel("ID:");
@@ -176,60 +175,52 @@ public class DialogCliente extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
-		
+
 		// Si estamos editando, cargamos los datos del cliente
 		if (editando) {
-	        cargarCliente();
-	    }
+			cargarCliente();
+		}
 	}
-	
+
 	private void cargarCliente() {
-	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-	    Cliente cliente = control.obtenerCliente(idCliente);
-	    if (cliente == null) {
-	        JOptionPane.showMessageDialog(
-	            this,
-	            "No existe el cliente seleccionado.",
-	            "Error",
-	            JOptionPane.ERROR_MESSAGE
-	        );
-	        dispose();
-	        return;
-	    }
-	    txtId.setText(cliente.getId());
-	    txtNombre.setText(cliente.getNombre());
-	    txtEmail.setText(cliente.getEmail());
-	    txtId.setEditable(false);
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		Cliente cliente = control.obtenerCliente(idCliente);
+		if (cliente == null) {
+			JOptionPane.showMessageDialog(this, "No existe el cliente seleccionado.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			dispose();
+			return;
+		}
+		txtId.setText(cliente.getId());
+		txtNombre.setText(cliente.getNombre());
+		txtEmail.setText(cliente.getEmail());
+		txtId.setEditable(false);
 	}
-	
+
 	private void guardarCliente() {
-	    try {
-	        String id = txtId.getText().trim();
-	        String nombre = txtNombre.getText().trim();
-	        String email = txtEmail.getText().trim();
-	        validarCampos(id, nombre, email);
-	        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-	        if (editando) {
-	            control.actualizarCliente(idCliente, nombre, email);
-	        } else {
-	            control.crearCliente(id, nombre, email);
-	        }
-	        dispose();
-	    } catch (Exception e) {
-	        JOptionPane.showMessageDialog(
-	            this,
-	            "Error al guardar cliente: " + e.getMessage(),
-	            "Error",
-	            JOptionPane.ERROR_MESSAGE
-	        );
-	    }
+		try {
+			String id = txtId.getText().trim();
+			String nombre = txtNombre.getText().trim();
+			String email = txtEmail.getText().trim();
+			validarCampos(id, nombre, email);
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			if (editando) {
+				control.actualizarCliente(idCliente, nombre, email);
+			} else {
+				control.crearCliente(id, nombre, email);
+			}
+			dispose();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al guardar cliente: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
-	
+
 	// Valida que los campos no estén vacíos
 	private void validarCampos(String id, String nombre, String email) {
-	    if (id.equals("") || nombre.equals("") || email.equals("")) {
-	        throw new IllegalArgumentException("Debe completar todos los campos.");
-	    }
+		if (id.equals("") || nombre.equals("") || email.equals("")) {
+			throw new IllegalArgumentException("Debe completar todos los campos.");
+		}
 	}
 
 }
