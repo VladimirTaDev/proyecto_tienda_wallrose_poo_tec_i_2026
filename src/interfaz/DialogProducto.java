@@ -10,9 +10,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
-import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import control.ControladoraWallRose;
+import logica.Producto;
 
 public class DialogProducto extends JDialog {
 
@@ -120,12 +122,68 @@ public class DialogProducto extends JDialog {
 		
 		// Cambia el título y el estado de los campos según el modo (agregar, editar, solo lectura)
 		if (!editando) {
+			cargarProducto();	
 			setTitle("Agregar producto");
 			lblCodigoValor.setText("(automático)");
 		} else if (soloLectura) {
+			activarModoLectura();
 			setTitle("Ver producto");
 		} else {
 			setTitle("Editar producto");
 		}
 	}
+	
+	private void cargarProducto() {
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		Producto producto = control.obtenerProducto(codigoProducto);
+		if (producto == null) {
+		JOptionPane.showMessageDialog(
+		this,
+		"No existe el producto seleccionado.",
+		"Error",
+		JOptionPane.ERROR_MESSAGE
+		);
+		dispose();
+		return;
+		}
+		lblCodigoValor.setText(String.valueOf(producto.getCodigo()));
+		txtNombre.setText(producto.getNombre());
+		txtExistencias.setText(String.valueOf(producto.getExistencias()));
+		comboUnidad.setSelectedItem(producto.getUnidad());
+		txtPrecio.setText(String.valueOf(producto.getPrecio()));
+		}
+	
+	private void activarModoLectura() {
+		txtNombre.setEditable(false);
+		txtExistencias.setEditable(false);
+		comboUnidad.setEnabled(false);
+		txtPrecio.setEditable(false);
+		btnGuardar.setVisible(false);
+		}
+	
+	private double leerDouble(JTextField campo, String nombreCampo) {
+		try {
+		String texto = campo.getText().trim().replace(",", ".");
+		return Double.parseDouble(texto);
+		} catch (NumberFormatException e) {
+		throw new IllegalArgumentException(nombreCampo + " debe ser un número real.");
+		}
+		}
+	
+	private String obtenerUnidadSeleccionada() {
+		Object item = comboUnidad.getEditor().getItem();
+		if (item == null) {
+		return "";
+		}
+		return item.toString().trim();
+		}
+	
+	private void validarCampos(String nombre, String unidad) {
+		if (nombre.equals("")) {
+		throw new IllegalArgumentException("El nombre no puede estar vacío.");
+		}
+		if (unidad.equals("")) {
+		throw new IllegalArgumentException("La unidad no puede estar vacía.");
+		}
+		}
 }
