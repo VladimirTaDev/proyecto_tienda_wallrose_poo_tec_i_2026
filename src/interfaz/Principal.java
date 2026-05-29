@@ -106,7 +106,7 @@ public class Principal {
 		JButton btnEditarProducto = new JButton("Editar");
 		btnEditarProducto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frmTiendaWallrose, "Editar producto todavía no implementado.");
+				editarProducto();
 			}
 		});
 		btnEditarProducto.setBounds(680, 110, 120, 25);
@@ -115,7 +115,7 @@ public class Principal {
 		JButton btnBorrarProducto = new JButton("Borrar");
 		btnBorrarProducto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar producto todavía no implementado.");
+				borrarProducto();
 			}
 		});
 		btnBorrarProducto.setBounds(680, 150, 120, 25);
@@ -362,19 +362,9 @@ public class Principal {
 		if (codigoProducto == null) {
 			return;
 		}
-		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
-		Producto producto = control.obtenerProducto(codigoProducto);
-		if (producto == null) {
-			JOptionPane.showMessageDialog(frmTiendaWallrose, "El producto seleccionado ya no existe.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-			cargarProductos();
-			return;
-		}
-		JOptionPane.showMessageDialog(frmTiendaWallrose,
-				"Código: " + producto.getCodigo() + "\nNombre: " + producto.getNombre() + "\nExistencias: "
-						+ producto.getExistencias() + "\nUnidad: " + producto.getUnidad() + "\nPrecio: "
-						+ producto.getPrecio(),
-				"Producto", JOptionPane.INFORMATION_MESSAGE);
+		DialogProducto ventana = new DialogProducto(codigoProducto, true);
+		ventana.setLocationRelativeTo(frmTiendaWallrose);
+		ventana.setVisible(true);
 	}
 	
 	private void agregarProducto() {
@@ -382,6 +372,42 @@ public class Principal {
 		ventana.setLocationRelativeTo(frmTiendaWallrose);
 		ventana.setVisible(true);
 		cargarTodo();
+	}
+	
+	private void editarProducto() {
+		Integer codigoProducto = obtenerCodigoProductoSeleccionado();
+		if (codigoProducto == null) {
+			return;
+		}
+		DialogProducto ventana = new DialogProducto(codigoProducto, false);
+		ventana.setLocationRelativeTo(frmTiendaWallrose);
+		ventana.setVisible(true);
+		cargarTodo();
+	}
+	
+	private void borrarProducto() {
+		Integer codigoProducto = obtenerCodigoProductoSeleccionado();
+		if (codigoProducto == null) {
+			return;
+		}
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		Producto producto = control.obtenerProducto(codigoProducto);
+		String nombreProducto = String.valueOf(codigoProducto);
+		if (producto != null) {
+			nombreProducto = producto.getNombre();
+		}
+		int respuesta = JOptionPane.showConfirmDialog(frmTiendaWallrose,
+				"Se eliminará el producto " + nombreProducto + ". ¿Desea continuar?", "Confirmar",
+				JOptionPane.YES_NO_OPTION);
+		if (respuesta == JOptionPane.YES_OPTION) {
+			try {
+				control.borrarProducto(codigoProducto);
+				cargarTodo();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al borrar producto: " + e.getMessage(), "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 
 }
