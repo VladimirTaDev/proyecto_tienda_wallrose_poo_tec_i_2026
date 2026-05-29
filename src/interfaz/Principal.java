@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.ListSelectionModel;
+import java.util.List;
 
 public class Principal {
 
@@ -156,7 +157,7 @@ public class Principal {
 		JButton btnCrearOrden = new JButton("Crear");
 		btnCrearOrden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frmTiendaWallrose, "Crear orden todavía no implementado.");
+				crearOrden();
 			}
 		});
 		btnCrearOrden.setBounds(680, 30, 120, 25);
@@ -174,7 +175,7 @@ public class Principal {
 		JButton btnBorrarOrden = new JButton("Borrar");
 		btnBorrarOrden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frmTiendaWallrose, "Borrar orden todavía no implementado.");
+				borrarOrden();
 			}
 		});
 		btnBorrarOrden.setBounds(680, 110, 120, 25);
@@ -445,6 +446,71 @@ public class Principal {
 		ventana.setLocationRelativeTo(frmTiendaWallrose);
 		ventana.setVisible(true);
 		cargarTodo();
+	}
+	
+	private void crearOrden() {
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		List<Cliente> clientes = control.obtenerListadoClientes();
+		if (clientes.isEmpty()) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Debe existir al menos un cliente para crear una orden.",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		Cliente cliente = (Cliente) JOptionPane.showInputDialog(frmTiendaWallrose, "Seleccione el cliente:",
+				"Crear orden", JOptionPane.QUESTION_MESSAGE, null, clientes.toArray(), clientes.get(0));
+		if (cliente == null) {
+			return;
+		}
+		try {
+			int numeroOrden = control.crearOrdenVacia(cliente.getId());
+			DetalleOrden ventana = new DetalleOrden(numeroOrden);
+			ventana.setLocationRelativeTo(frmTiendaWallrose);
+			ventana.setVisible(true);
+			cargarTodo();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al crear orden: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void borrarOrden() {
+	    Integer numeroOrden = obtenerNumeroOrdenSeleccionada();
+	    if (numeroOrden == null) {
+	        return;
+	    }
+	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+	    OrdenCompra orden = control.obtenerOrdenCompra(numeroOrden);
+	    if (orden == null) {
+	        JOptionPane.showMessageDialog(
+	            frmTiendaWallrose,
+	            "La orden seleccionada ya no existe.",
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	        cargarTodo();
+	        return;
+	    }
+	    int respuesta = JOptionPane.showConfirmDialog(
+	        frmTiendaWallrose,
+	        "Se eliminará la orden " + orden.getNumero()
+	            + " del cliente " + orden.getCliente().getNombre()
+	            + ". ¿Desea continuar?",
+	        "Confirmar",
+	        JOptionPane.YES_NO_OPTION
+	    );
+	    if (respuesta == JOptionPane.YES_OPTION) {
+	        try {
+	            control.borrarOrden(numeroOrden);
+	            cargarTodo();
+	        } catch (Exception e) {
+	            JOptionPane.showMessageDialog(
+	                frmTiendaWallrose,
+	                "Error al borrar orden: " + e.getMessage(),
+	                "Error",
+	                JOptionPane.ERROR_MESSAGE
+	            );
+	        }
+	    }
 	}
 
 }
