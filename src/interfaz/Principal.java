@@ -132,7 +132,16 @@ public class Principal {
 
 		tablaOrdenes = new JTable();
 		tablaOrdenes.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "Número", "Fecha", "ID Cliente", "Cliente", "Estado", "Total" }));
+				new String[] { "Número", "Fecha", "ID Cliente", "Cliente", "Estado", "Total" }) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		});
+		tablaOrdenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
 		scrollOrdenes.setViewportView(tablaOrdenes);
 
 		JLabel lblTotalPendienteFijo = new JLabel("Total pendiente:");
@@ -156,7 +165,7 @@ public class Principal {
 		JButton btnVerOrden = new JButton("Ver");
 		btnVerOrden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frmTiendaWallrose, "Ver orden todavía no implementado.");
+				verOrden();
 			}
 		});
 		btnVerOrden.setBounds(680, 70, 120, 25);
@@ -408,6 +417,52 @@ public class Principal {
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
+	}
+	
+	private Integer obtenerNumeroOrdenSeleccionada() {
+	    int fila = tablaOrdenes.getSelectedRow();
+	    if (fila == -1) {
+	        JOptionPane.showMessageDialog(
+	            frmTiendaWallrose,
+	            "Debe seleccionar una orden.",
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	        return null;
+	    }
+	    int filaModelo = tablaOrdenes.convertRowIndexToModel(fila);
+	    DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
+	    Object valor = model.getValueAt(filaModelo, 0);
+	    return Integer.parseInt(valor.toString());
+	}
+	
+	private void verOrden() {
+	    Integer numeroOrden = obtenerNumeroOrdenSeleccionada();
+	    if (numeroOrden == null) {
+	        return;
+	    }
+	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+	    OrdenCompra orden = control.obtenerOrdenCompra(numeroOrden);
+	    if (orden == null) {
+	        JOptionPane.showMessageDialog(
+	            frmTiendaWallrose,
+	            "La orden seleccionada ya no existe.",
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	        cargarOrdenes();
+	        return;
+	    }
+	    JOptionPane.showMessageDialog(
+	        frmTiendaWallrose,
+	        "Número: " + orden.getNumero()
+	            + "\nCliente: " + orden.getCliente().getId() + " - " + orden.getCliente().getNombre()
+	            + "\nFecha: " + orden.getFecha()
+	            + "\nEstado: " + orden.getEstado()
+	            + "\nTotal: " + orden.calcularTotal(),
+	        "Orden",
+	        JOptionPane.INFORMATION_MESSAGE
+	    );
 	}
 
 }
