@@ -46,6 +46,8 @@ public class DetalleOrden extends JDialog {
 	private JButton btnAgregarLinea;
 	private JButton btnActualizarLinea;
 	private JButton btnBorrarLinea;
+	private JButton btnPonerPendiente;
+	private JButton btnPonerTerminada;
 	
 	/**
 	 * Launch the application.
@@ -134,6 +136,23 @@ public class DetalleOrden extends JDialog {
         lblTotal.setBounds(130, 450, 150, 25);
         getContentPane().add(lblTotal);
         
+        btnPonerPendiente = new JButton("Poner pendiente");
+        btnPonerPendiente.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ponerPendiente();
+        	}
+        });
+        btnPonerPendiente.setBounds(300, 405, 160, 25);
+        getContentPane().add(btnPonerPendiente);
+        btnPonerTerminada = new JButton("Poner terminada");
+        btnPonerTerminada.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ponerTerminada();
+        	}
+        });
+        btnPonerTerminada.setBounds(300, 440, 160, 25);
+        getContentPane().add(btnPonerTerminada);
+        
         JLabel lblLineas = new JLabel("Líneas de la orden:");
         lblLineas.setBounds(20, 150, 150, 25);
         getContentPane().add(lblLineas);
@@ -191,9 +210,19 @@ public class DetalleOrden extends JDialog {
         btnAgregarLinea.setBounds(540, 310, 220, 25);
         getContentPane().add(btnAgregarLinea);
         btnActualizarLinea = new JButton("Actualizar línea");
+        btnActualizarLinea.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		actualizarLinea();
+        	}
+        });
         btnActualizarLinea.setBounds(540, 345, 220, 25);
         getContentPane().add(btnActualizarLinea);
         btnBorrarLinea = new JButton("Borrar línea");
+        btnBorrarLinea.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		borrarLinea();
+        	}
+        });
         btnBorrarLinea.setBounds(540, 380, 220, 25);
         getContentPane().add(btnBorrarLinea);
                 
@@ -331,5 +360,95 @@ public class DetalleOrden extends JDialog {
 	    tablaLineas.clearSelection();
 	}
 	
+	private Integer obtenerIndiceLineaSeleccionada() {
+		int fila = tablaLineas.getSelectedRow();
+		if (fila == -1) {
+			JOptionPane.showMessageDialog(this, "Debe seleccionar una línea.", "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+		return tablaLineas.convertRowIndexToModel(fila);
+	}
+	
+	private void actualizarLinea() {
+	    Integer indiceLinea = obtenerIndiceLineaSeleccionada();
+	    if (indiceLinea == null) {
+	        return;
+	    }
+	    try {
+	        Producto producto = obtenerProductoSeleccionado();
+	        double cantidad = leerCantidad();
+	        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+	        control.actualizarLineaOrden(numeroOrden, indiceLinea, producto.getCodigo(), cantidad);
+	        limpiarFormularioLinea();
+	        cargarDatosOrden();
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(
+	            this,
+	            "Error al actualizar línea: " + e.getMessage(),
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	    }
+	}
+	
+	private void borrarLinea() {
+		Integer indiceLinea = obtenerIndiceLineaSeleccionada();
+		if (indiceLinea == null) {
+			return;
+		}
+		int respuesta = JOptionPane.showConfirmDialog(this, "Se eliminará la línea seleccionada. ¿Desea continuar?",
+				"Confirmar", JOptionPane.YES_NO_OPTION);
+		if (respuesta != JOptionPane.YES_OPTION) {
+			return;
+		}
+		try {
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			control.borrarLineaOrden(numeroOrden, indiceLinea);
+			limpiarFormularioLinea();
+			cargarDatosOrden();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al borrar línea: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void ponerPendiente() {
+		int respuesta = JOptionPane.showConfirmDialog(this,
+				"La orden pasará a PENDIENTE.\n"
+						+ "Se descontarán existencias y ya no se podrán modificar sus líneas.\n" + "¿Desea continuar?",
+				"Confirmar", JOptionPane.YES_NO_OPTION);
+		if (respuesta != JOptionPane.YES_OPTION) {
+			return;
+		}
+		try {
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			control.establecerOrdenPendiente(numeroOrden);
+			cargarProductosCombo();
+			cargarDatosOrden();
+			JOptionPane.showMessageDialog(this, "La orden fue puesta como pendiente.", "Información",
+					JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al poner la orden como pendiente: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void ponerTerminada() {
+		int respuesta = JOptionPane.showConfirmDialog(this, "La orden pasará a TERMINADA.\n" + "¿Desea continuar?",
+				"Confirmar", JOptionPane.YES_NO_OPTION);
+		if (respuesta != JOptionPane.YES_OPTION) {
+			return;
+		}
+		try {
+			ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+			control.establecerOrdenTerminada(numeroOrden);
+			cargarDatosOrden();
+			JOptionPane.showMessageDialog(this, "La orden fue terminada.", "Información",
+					JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al terminar la orden: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
 }
