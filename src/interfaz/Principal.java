@@ -121,6 +121,19 @@ public class Principal {
 		});
 		btnBorrarProducto.setBounds(680, 150, 120, 25);
 		panelProductos.add(btnBorrarProducto);
+		
+		JButton btnGuardarDatos = new JButton("Guardar Datos");
+		btnGuardarDatos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				guardarDatosManual();
+			}
+		});
+		btnGuardarDatos.setBounds(680, 282, 120, 25);
+		panelProductos.add(btnGuardarDatos);
+		
+		JButton btnCargarDatos = new JButton("Cargar Datos");
+		btnCargarDatos.setBounds(680, 318, 120, 25);
+		panelProductos.add(btnCargarDatos);
 
 		// Órdenes, panel
 		JPanel panelOrdenes = new JPanel();
@@ -511,6 +524,17 @@ public class Principal {
 	            );
 	        }
 	    }
+	}
+
+	private void guardarDatosManual() {
+		try {
+			ControladoraWallRose.guardarDatos();
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Datos guardados correctamente.", "Información",
+					JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al guardar datos: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 }

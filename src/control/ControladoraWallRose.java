@@ -6,9 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.io.Serializable;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-public class ControladoraWallRose {
-    private static ControladoraWallRose instancia;
+public class ControladoraWallRose implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private static final String ARCHIVO_DATOS = "DatosWallRose.bin";
+	
+	private static ControladoraWallRose instancia;
 
     private int consecutivoOrden;
     private int consecutivoProducto;
@@ -312,6 +321,22 @@ public class ControladoraWallRose {
 
         ordenes.remove(numeroOrden);
     }
+    
+    public static void guardarDatos() throws IOException {
+    	FileOutputStream file = new FileOutputStream(ARCHIVO_DATOS);
+    	ObjectOutputStream stream = new ObjectOutputStream(file);
+    	stream.writeObject(obtenerInstancia());
+    	stream.close();
+    	file.close();
+    	}
+    
+    public static void cargarDatos() throws IOException, ClassNotFoundException {
+    	FileInputStream file = new FileInputStream(ARCHIVO_DATOS);
+    	ObjectInputStream stream = new ObjectInputStream(file);
+    	instancia = (ControladoraWallRose) stream.readObject();
+    	stream.close();
+    	file.close();
+    	}
     
     // TEMPORAL: Método para cargar datos de prueba al iniciar la aplicación
     private void cargarDatosPrueba() {

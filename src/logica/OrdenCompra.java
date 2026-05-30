@@ -3,11 +3,13 @@ package logica;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
-public class OrdenCompra {
+public class OrdenCompra implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private int numero;
 	private LocalDateTime fecha;
-	private static double IV = 0.13;
+	private static final double IV = 0.13;
 	private Cliente cliente;
 	private EstadoOrden estado;
 	private List<LineaOrden> lineas;
