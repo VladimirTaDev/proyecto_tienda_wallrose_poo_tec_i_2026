@@ -23,6 +23,8 @@ import javax.swing.JLabel;
 import javax.swing.ListSelectionModel;
 import java.util.List;
 import java.io.FileNotFoundException;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Principal {
 
@@ -54,6 +56,7 @@ public class Principal {
 	 */
 	public Principal() {
 		initialize();
+		cargarDatosAlIniciar();
 		cargarTodo();
 	}
 
@@ -65,9 +68,16 @@ public class Principal {
 		frmTiendaWallrose.setResizable(false);
 		frmTiendaWallrose.setTitle("Tienda WallRose");
 		frmTiendaWallrose.setBounds(100, 100, 850, 520);
-		frmTiendaWallrose.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmTiendaWallrose.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frmTiendaWallrose.getContentPane().setLayout(new BorderLayout(0, 0));
 
+		frmTiendaWallrose.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent e) {
+		        cerrarAplicacion();
+		    }
+		});
+		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		frmTiendaWallrose.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
@@ -555,6 +565,47 @@ public class Principal {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al cargar datos: " + e.getMessage(), "Error",
 					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void cargarDatosAlIniciar() {
+		try {
+			ControladoraWallRose.cargarDatos();
+		} catch (FileNotFoundException e) {
+			ControladoraWallRose.obtenerInstancia();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(
+					frmTiendaWallrose, "No se pudieron cargar los datos guardados.\n"
+							+ "La aplicación iniciará con datos vacíos.\n\n" + "Detalle: " + e.getMessage(),
+					"Error al cargar datos", JOptionPane.ERROR_MESSAGE);
+			ControladoraWallRose.obtenerInstancia();
+		}
+	}
+	
+	private boolean guardarDatosAlCerrar() {
+		try {
+			ControladoraWallRose.guardarDatos();
+			return true;
+		} catch (Exception e) {
+			int respuesta = JOptionPane.showConfirmDialog(frmTiendaWallrose,
+					"No se pudieron guardar los datos.\n" + "Detalle: " + e.getMessage()
+							+ "\n\n¿Desea salir de todos modos?",
+					"Error al guardar datos", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+			return respuesta == JOptionPane.YES_OPTION;
+		}
+	}
+	
+	private void cerrarAplicacion() {
+		int respuesta = JOptionPane.showConfirmDialog(frmTiendaWallrose,
+				"Se guardarán los datos antes de cerrar.\n¿Desea salir?", "Confirmar salida",
+				JOptionPane.YES_NO_OPTION);
+		if (respuesta != JOptionPane.YES_OPTION) {
+			return;
+		}
+		boolean puedeCerrar = guardarDatosAlCerrar();
+		if (puedeCerrar) {
+			frmTiendaWallrose.dispose();
+			System.exit(0);
 		}
 	}
 
