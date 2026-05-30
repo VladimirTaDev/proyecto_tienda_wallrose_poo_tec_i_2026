@@ -17,9 +17,14 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import logica.LineaOrden;
 import logica.Producto;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.ListSelectionModel;
 
 public class DetalleOrden extends JDialog {
 
@@ -35,6 +40,12 @@ public class DetalleOrden extends JDialog {
 	private JLabel lblImpuesto;
 	private JLabel lblTotal;
 	private JTable tablaLineas;
+	
+	private JComboBox<Producto> comboProductos;
+	private JTextField txtCantidad;
+	private JButton btnAgregarLinea;
+	private JButton btnActualizarLinea;
+	private JButton btnBorrarLinea;
 	
 	/**
 	 * Launch the application.
@@ -61,6 +72,7 @@ public class DetalleOrden extends JDialog {
         this.numeroOrden = numeroOrden;
         initUI();
         
+        cargarProductosCombo();
         if (numeroOrden != null) {
             cargarDatosOrden();
         }
@@ -69,7 +81,7 @@ public class DetalleOrden extends JDialog {
     private void initUI() {
         setModal(true);
         setTitle("Detalle orden");
-        setBounds(100, 100, 650, 480);
+        setBounds(100, 100, 800, 560);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
         
@@ -102,24 +114,24 @@ public class DetalleOrden extends JDialog {
         getContentPane().add(lblEstado);
 
         JLabel lblMontoFijo = new JLabel("Monto:");
-        lblMontoFijo.setBounds(20, 350, 100, 25);
+        lblMontoFijo.setBounds(20, 390, 100, 25);
         getContentPane().add(lblMontoFijo);
         lblMonto = new JLabel("0.0");
-        lblMonto.setBounds(130, 350, 150, 25);
+        lblMonto.setBounds(130, 390, 150, 25);
         getContentPane().add(lblMonto);
 
         JLabel lblImpuestoFijo = new JLabel("Impuesto:");
-        lblImpuestoFijo.setBounds(20, 380, 100, 25);
+        lblImpuestoFijo.setBounds(20, 420, 100, 25);
         getContentPane().add(lblImpuestoFijo);
         lblImpuesto = new JLabel("0.0");
-        lblImpuesto.setBounds(130, 380, 150, 25);
+        lblImpuesto.setBounds(130, 420, 150, 25);
         getContentPane().add(lblImpuesto);
 
         JLabel lblTotalFijo = new JLabel("Total:");
-        lblTotalFijo.setBounds(20, 410, 100, 25);
+        lblTotalFijo.setBounds(20, 450, 100, 25);
         getContentPane().add(lblTotalFijo);
         lblTotal = new JLabel("0.0");
-        lblTotal.setBounds(130, 410, 150, 25);
+        lblTotal.setBounds(130, 450, 150, 25);
         getContentPane().add(lblTotal);
         
         JLabel lblLineas = new JLabel("Líneas de la orden:");
@@ -127,7 +139,7 @@ public class DetalleOrden extends JDialog {
         getContentPane().add(lblLineas);
 
         JScrollPane scrollLineas = new JScrollPane();
-        scrollLineas.setBounds(20, 180, 590, 150);
+        scrollLineas.setBounds(20, 180, 500, 190);
         getContentPane().add(scrollLineas);
 
         tablaLineas = new JTable();
@@ -144,6 +156,46 @@ public class DetalleOrden extends JDialog {
             }
         });
         scrollLineas.setViewportView(tablaLineas);
+        
+        // Selección de una sola fila en la tabla
+        tablaLineas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        
+        // Agregar listener para selección de filas en la tabla
+        tablaLineas.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    cargarLineaSeleccionadaEnFormulario();
+                }
+            }
+        });
+        
+        JLabel lblProducto = new JLabel("Producto:");
+        lblProducto.setBounds(540, 180, 120, 25);
+        getContentPane().add(lblProducto);
+        comboProductos = new JComboBox<Producto>();
+        comboProductos.setBounds(540, 205, 220, 25);
+        getContentPane().add(comboProductos);
+        JLabel lblCantidad = new JLabel("Cantidad:");
+        lblCantidad.setBounds(540, 245, 120, 25);
+        getContentPane().add(lblCantidad);
+        txtCantidad = new JTextField();
+        txtCantidad.setBounds(540, 270, 220, 25);
+        getContentPane().add(txtCantidad);
+        txtCantidad.setColumns(10);
+        btnAgregarLinea = new JButton("Agregar línea");
+        btnAgregarLinea.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		agregarLinea();
+        	}
+        });
+        btnAgregarLinea.setBounds(540, 310, 220, 25);
+        getContentPane().add(btnAgregarLinea);
+        btnActualizarLinea = new JButton("Actualizar línea");
+        btnActualizarLinea.setBounds(540, 345, 220, 25);
+        getContentPane().add(btnActualizarLinea);
+        btnBorrarLinea = new JButton("Borrar línea");
+        btnBorrarLinea.setBounds(540, 380, 220, 25);
+        getContentPane().add(btnBorrarLinea);
                 
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
@@ -169,7 +221,7 @@ public class DetalleOrden extends JDialog {
 		        dispose();
 		    }
 		});
-		btnCerrar.setBounds(490, 405, 120, 25);
+		btnCerrar.setBounds(640, 439, 120, 25);
 		getContentPane().add(btnCerrar);
     }
     
@@ -208,5 +260,76 @@ public class DetalleOrden extends JDialog {
 			model.addRow(fila);
 		}
 	}
+	
+	private void cargarProductosCombo() {
+		ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+		comboProductos.removeAllItems();
+		for (Producto producto : control.obtenerListadoProductos()) {
+			comboProductos.addItem(producto);
+		}
+	}
+	
+	private void cargarLineaSeleccionadaEnFormulario() {
+	    int fila = tablaLineas.getSelectedRow();
+	    if (fila == -1) {
+	        return;
+	    }
+	    int indiceLinea = tablaLineas.convertRowIndexToModel(fila);
+	    ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+	    List<LineaOrden> lineas = control.obtenerLineasOrden(numeroOrden);
+	    if (indiceLinea < 0 || indiceLinea >= lineas.size()) {
+	        return;
+	    }
+	    LineaOrden linea = lineas.get(indiceLinea);
+	    comboProductos.setSelectedItem(linea.getProducto());
+	    txtCantidad.setText(String.valueOf(linea.getCantidad()));
+	}
+	
+	private double leerCantidad() {
+	    try {
+	        String texto = txtCantidad.getText().trim().replace(",", ".");
+	        if (texto.equals("")) {
+	            throw new IllegalArgumentException("Debe escribir la cantidad.");
+	        }
+	        return Double.parseDouble(texto);
+	    } catch (NumberFormatException e) {
+	        throw new IllegalArgumentException("La cantidad debe ser un número.");
+	    }
+	}
+	
+	private Producto obtenerProductoSeleccionado() {
+	    Producto producto = (Producto) comboProductos.getSelectedItem();
+	    if (producto == null) {
+	        throw new IllegalArgumentException("Debe seleccionar un producto.");
+	    }
+	    return producto;
+	}
+	
+	private void agregarLinea() {
+	    try {
+	        Producto producto = obtenerProductoSeleccionado();
+	        double cantidad = leerCantidad();
+	        ControladoraWallRose control = ControladoraWallRose.obtenerInstancia();
+	        control.agregarLineaOrden(numeroOrden, producto.getCodigo(), cantidad);
+	        limpiarFormularioLinea();
+	        cargarDatosOrden();
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(
+	            this,
+	            "Error al agregar línea: " + e.getMessage(),
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	    }
+	}
+	
+	private void limpiarFormularioLinea() {
+	    txtCantidad.setText("");
+	    if (comboProductos.getItemCount() > 0) {
+	        comboProductos.setSelectedIndex(0);
+	    }
+	    tablaLineas.clearSelection();
+	}
+	
 
 }
