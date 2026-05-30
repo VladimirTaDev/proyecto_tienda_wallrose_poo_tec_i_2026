@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.ListSelectionModel;
 import java.util.List;
+import java.io.FileNotFoundException;
 
 public class Principal {
 
@@ -132,6 +133,11 @@ public class Principal {
 		panelProductos.add(btnGuardarDatos);
 		
 		JButton btnCargarDatos = new JButton("Cargar Datos");
+		btnCargarDatos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarDatosManual();
+			}
+		});
 		btnCargarDatos.setBounds(680, 318, 120, 25);
 		panelProductos.add(btnCargarDatos);
 
@@ -533,6 +539,21 @@ public class Principal {
 					JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al guardar datos: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void cargarDatosManual() {
+		try {
+			ControladoraWallRose.cargarDatos();
+			cargarTodo();
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Datos cargados correctamente.", "Información",
+					JOptionPane.INFORMATION_MESSAGE);
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose,
+					"No existe el archivo de datos. Primero debe guardar datos.", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al cargar datos: " + e.getMessage(), "Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
